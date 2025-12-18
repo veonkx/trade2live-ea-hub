@@ -9,27 +9,27 @@ const plans = [
     duration: "3 Months",
     popular: false,
     prices: {
-      icf: { price: 4500, per: "฿1,500/mo" },
-      zb: { price: 3900, per: "฿1,300/mo" },
-      bundle: { price: 6900, per: "฿2,300/mo" },
+      icf: { price: 129, per: "$43/mo" },
+      zb: { price: 109, per: "$36/mo" },
+      bundle: { price: 199, per: "$66/mo" },
     },
   },
   {
     duration: "6 Months",
     popular: true,
     prices: {
-      icf: { price: 7800, per: "฿1,300/mo" },
-      zb: { price: 6600, per: "฿1,100/mo" },
-      bundle: { price: 11900, per: "฿1,983/mo" },
+      icf: { price: 219, per: "$37/mo" },
+      zb: { price: 189, per: "$32/mo" },
+      bundle: { price: 339, per: "$57/mo" },
     },
   },
   {
     duration: "12 Months",
     popular: false,
     prices: {
-      icf: { price: 12900, per: "฿1,075/mo" },
-      zb: { price: 10900, per: "฿908/mo" },
-      bundle: { price: 19900, per: "฿1,658/mo" },
+      icf: { price: 369, per: "$31/mo" },
+      zb: { price: 309, per: "$26/mo" },
+      bundle: { price: 569, per: "$47/mo" },
     },
   },
 ];
@@ -120,7 +120,7 @@ const PricingPage = () => {
                   <div className="text-center">
                     <h3 className="font-heading text-lg font-semibold mb-2">{plan.duration}</h3>
                     <div className="mb-2">
-                      <span className="font-heading text-4xl font-bold">฿{plan.prices.icf.price.toLocaleString()}</span>
+                      <span className="font-heading text-4xl font-bold">${plan.prices.icf.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-6">{plan.prices.icf.per}</p>
                     <Button variant={plan.popular ? "gold" : "gold-outline"} className="w-full">
@@ -169,7 +169,7 @@ const PricingPage = () => {
                   <div className="text-center">
                     <h3 className="font-heading text-lg font-semibold mb-2">{plan.duration}</h3>
                     <div className="mb-2">
-                      <span className="font-heading text-4xl font-bold">฿{plan.prices.zb.price.toLocaleString()}</span>
+                      <span className="font-heading text-4xl font-bold">${plan.prices.zb.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-6">{plan.prices.zb.per}</p>
                     <Button variant="outline" className="w-full border-profit text-profit hover:bg-profit hover:text-profit-foreground">
@@ -217,7 +217,7 @@ const PricingPage = () => {
                   <div className="text-center">
                     <h3 className="font-heading text-lg font-semibold mb-2">{plan.duration}</h3>
                     <div className="mb-2">
-                      <span className="font-heading text-4xl font-bold text-gradient-gold">฿{plan.prices.bundle.price.toLocaleString()}</span>
+                      <span className="font-heading text-4xl font-bold text-gradient-gold">${plan.prices.bundle.price}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-6">{plan.prices.bundle.per}</p>
                     <Button variant="premium" className="w-full">
