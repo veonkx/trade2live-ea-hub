@@ -47,9 +47,22 @@ const AdminDashboard = () => {
   const [editSubDialog, setEditSubDialog] = useState(false);
   const [editPaymentDialog, setEditPaymentDialog] = useState(false);
   const [addLicenseDialog, setAddLicenseDialog] = useState(false);
+  const [createSubDialog, setCreateSubDialog] = useState(false);
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [selectedSubForLicense, setSelectedSubForLicense] = useState<string>("");
+  const [isCreatingSub, setIsCreatingSub] = useState(false);
+
+  // New subscription form state
+  const [newSubForm, setNewSubForm] = useState({
+    user_id: "",
+    package_name: "",
+    ea_type: "icf" as EAType,
+    status: "pending" as SubscriptionStatus,
+    start_date: "",
+    end_date: "",
+    max_accounts: 1,
+  });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -133,6 +146,42 @@ const AdminDashboard = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
+  };
+
+  const createSubscription = async () => {
+    if (!newSubForm.user_id || !newSubForm.package_name) {
+      toast({ title: "กรุณากรอกข้อมูลให้ครบ", variant: "destructive" });
+      return;
+    }
+
+    setIsCreatingSub(true);
+    const { error } = await supabase.from("subscriptions").insert({
+      user_id: newSubForm.user_id,
+      package_name: newSubForm.package_name,
+      ea_type: newSubForm.ea_type,
+      status: newSubForm.status,
+      start_date: newSubForm.start_date || null,
+      end_date: newSubForm.end_date || null,
+      max_accounts: newSubForm.max_accounts,
+    });
+
+    setIsCreatingSub(false);
+    if (error) {
+      toast({ title: "เกิดข้อผิดพลาด", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "สร้าง Subscription สำเร็จ" });
+      fetchSubscriptions();
+      setCreateSubDialog(false);
+      setNewSubForm({
+        user_id: "",
+        package_name: "",
+        ea_type: "icf",
+        status: "pending",
+        start_date: "",
+        end_date: "",
+        max_accounts: 1,
+      });
+    }
   };
 
   const updateSubscriptionStatus = async (id: string, status: SubscriptionStatus) => {
@@ -388,8 +437,16 @@ const AdminDashboard = () => {
           <TabsContent value="subscriptions">
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle>Subscriptions ทั้งหมด</CardTitle>
-                <CardDescription>จัดการ subscription ของผู้ใช้</CardDescription>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle>Subscriptions ทั้งหมด</CardTitle>
+                    <CardDescription>จัดการ subscription ของผู้ใช้</CardDescription>
+                  </div>
+                  <Button onClick={() => setCreateSubDialog(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    สร้าง Subscription
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {loading ? (
@@ -655,6 +712,121 @@ const AdminDashboard = () => {
               <Button onClick={() => generateLicenseKey(selectedSubForLicense)}>
                 <Plus className="w-4 h-4 mr-2" />
                 สร้าง License Key
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Create Subscription Dialog */}
+        <Dialog open={createSubDialog} onOpenChange={setCreateSubDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>สร้าง Subscription ใหม่</DialogTitle>
+              <DialogDescription>เพิ่ม subscription ให้กับผู้ใช้</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>เลือกผู้ใช้ *</Label>
+                <Select
+                  value={newSubForm.user_id}
+                  onValueChange={(value) => setNewSubForm({ ...newSubForm, user_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="เลือกผู้ใช้" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users.map((u) => (
+                      <SelectItem key={u.user_id} value={u.user_id}>
+                        {u.full_name} ({u.email})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>ชื่อแพ็กเกจ *</Label>
+                <Input
+                  placeholder="เช่น ICF$ 3 Months"
+                  value={newSubForm.package_name}
+                  onChange={(e) => setNewSubForm({ ...newSubForm, package_name: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>ประเภท EA</Label>
+                  <Select
+                    value={newSubForm.ea_type}
+                    onValueChange={(value) => setNewSubForm({ ...newSubForm, ea_type: value as EAType })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="icf">ICF$</SelectItem>
+                      <SelectItem value="zb">ZB$</SelectItem>
+                      <SelectItem value="bundle">Bundle</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>สถานะ</Label>
+                  <Select
+                    value={newSubForm.status}
+                    onValueChange={(value) => setNewSubForm({ ...newSubForm, status: value as SubscriptionStatus })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">รอดำเนินการ</SelectItem>
+                      <SelectItem value="active">ใช้งานอยู่</SelectItem>
+                      <SelectItem value="expired">หมดอายุ</SelectItem>
+                      <SelectItem value="cancelled">ยกเลิก</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>วันเริ่มต้น</Label>
+                  <Input
+                    type="date"
+                    value={newSubForm.start_date}
+                    onChange={(e) => setNewSubForm({ ...newSubForm, start_date: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>วันสิ้นสุด</Label>
+                  <Input
+                    type="date"
+                    value={newSubForm.end_date}
+                    onChange={(e) => setNewSubForm({ ...newSubForm, end_date: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>จำนวนบัญชีสูงสุด</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={newSubForm.max_accounts}
+                  onChange={(e) => setNewSubForm({ ...newSubForm, max_accounts: parseInt(e.target.value) || 1 })}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setCreateSubDialog(false)}>
+                ยกเลิก
+              </Button>
+              <Button onClick={createSubscription} disabled={isCreatingSub}>
+                {isCreatingSub && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                สร้าง Subscription
               </Button>
             </DialogFooter>
           </DialogContent>
