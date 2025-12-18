@@ -2,9 +2,12 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, TrendingUp, Bot } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroImage from "@/assets/hero-trading.jpg";
 
 export const HeroSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       {/* Background Image */}
@@ -45,11 +48,9 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
           >
-            Automate Your
+            {t("hero.title")}
             <br />
-            <span className="text-gradient-gold">Forex Trading</span>
-            <br />
-            With Precision
+            <span className="text-gradient-gold">{t("hero.titleHighlight")}</span>
           </motion.h1>
 
           <motion.p
@@ -58,8 +59,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl"
           >
-            Professional Expert Advisors designed for sustainable, long-term growth. 
-            Low risk, controlled drawdown, and fully automated trading strategies.
+            {t("hero.description")}
           </motion.p>
 
           <motion.div
@@ -70,13 +70,13 @@ export const HeroSection = () => {
           >
             <Link to="/pricing">
               <Button variant="gold" size="xl" className="group">
-                Start Trading
+                {t("nav.getStarted")}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link to="/performance">
               <Button variant="glass" size="xl">
-                View Performance
+                {t("hero.viewPerformance")}
               </Button>
             </Link>
           </motion.div>
@@ -103,7 +103,7 @@ export const HeroSection = () => {
               </div>
               <div>
                 <div className="font-heading text-2xl md:text-3xl font-bold">&lt;15%</div>
-                <div className="text-sm text-muted-foreground">Max Drawdown</div>
+                <div className="text-sm text-muted-foreground">{t("hero.stat.maxDrawdown")}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">

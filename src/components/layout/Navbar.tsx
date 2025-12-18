@@ -3,21 +3,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, TrendingUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/performance", label: "Performance" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-];
 
 const productLinks = [
   { href: "/ea/icf", label: "ICF$" },
@@ -27,6 +20,16 @@ const productLinks = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/performance", label: t("nav.performance") },
+    { href: "/pricing", label: t("nav.pricing") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/faq", label: t("nav.faq") },
+    { href: "/contact", label: t("nav.contact") },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
@@ -52,7 +55,7 @@ export const Navbar = () => {
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
-              Home
+              {t("nav.home")}
             </Link>
 
             {/* Our Product Dropdown */}
@@ -64,7 +67,7 @@ export const Navbar = () => {
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
-                Our Product
+                {t("nav.ourProduct")}
                 <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-card border-border">
@@ -98,20 +101,24 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* CTA Button + Language Toggle */}
+          <div className="hidden lg:flex items-center gap-2">
+            <LanguageToggle />
             <Button variant="gold" size="lg">
-              Get Started
+              {t("nav.getStarted")}
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex lg:hidden items-center gap-2">
+            <LanguageToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -135,12 +142,12 @@ export const Navbar = () => {
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                   }`}
                 >
-                  Home
+                  {t("nav.home")}
                 </Link>
 
                 {/* Our Product Section */}
                 <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Our Product
+                  {t("nav.ourProduct")}
                 </div>
                 {productLinks.map((link) => (
                   <Link
@@ -172,7 +179,7 @@ export const Navbar = () => {
                   </Link>
                 ))}
                 <Button variant="gold" className="mt-4">
-                  Get Started
+                  {t("nav.getStarted")}
                 </Button>
               </div>
             </div>
