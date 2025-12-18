@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserRole } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, LogOut, User, Package, Key, CreditCard } from "lucide-react";
+import { TrendingUp, LogOut, User, Package, Key, CreditCard, Shield } from "lucide-react";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import type { Database } from "@/integrations/supabase/types";
@@ -17,6 +18,7 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 const DashboardPage = () => {
   const { user, signOut, loading: authLoading } = useAuth();
+  const { isAdminOrStaff } = useUserRole();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -124,6 +126,14 @@ const DashboardPage = () => {
             <span className="text-sm text-muted-foreground hidden sm:block">
               {profile?.full_name || user?.email}
             </span>
+            {isAdminOrStaff && (
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/admin">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Admin
+                </Link>
+              </Button>
+            )}
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ
