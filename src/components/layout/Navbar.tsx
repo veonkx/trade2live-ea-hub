@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, TrendingUp, ChevronDown } from "lucide-react";
+import { Menu, X, TrendingUp, ChevronDown, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
@@ -104,9 +106,20 @@ export const Navbar = () => {
           {/* CTA Button + Language Toggle */}
           <div className="hidden lg:flex items-center gap-2">
             <LanguageToggle />
-            <Button variant="gold" size="lg">
-              {t("nav.getStarted")}
-            </Button>
+            {user ? (
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/dashboard">
+                  <User className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="gold" size="lg" asChild>
+                <Link to="/auth">
+                  {t("nav.getStarted")}
+                </Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -178,9 +191,20 @@ export const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
-                <Button variant="gold" className="mt-4">
-                  {t("nav.getStarted")}
-                </Button>
+                {user ? (
+                  <Button variant="outline" className="mt-4" asChild>
+                    <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="gold" className="mt-4" asChild>
+                    <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      {t("nav.getStarted")}
+                    </Link>
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>
