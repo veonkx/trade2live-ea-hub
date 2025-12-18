@@ -1,22 +1,25 @@
 import { Link } from "react-router-dom";
 import { TrendingUp, Mail, MessageCircle, Facebook } from "lucide-react";
-
-const footerLinks = {
-  products: [
-    { label: "Trade2live ICF$", href: "/ea/icf" },
-    { label: "Trade2live ZB$", href: "/ea/zb" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "Performance", href: "/performance" },
-  ],
-  company: [
-    { label: "About Us", href: "/about" },
-    { label: "FAQ", href: "/faq" },
-    { label: "Contact", href: "/contact" },
-    { label: "Terms", href: "/terms" },
-  ],
-};
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Footer = () => {
+  const { t } = useLanguage();
+
+  const footerLinks = {
+    products: [
+      { label: "Trade2live ICF$", href: "/ea/icf" },
+      { label: "Trade2live ZB$", href: "/ea/zb" },
+      { label: t("nav.pricing"), href: "/pricing" },
+      { label: t("nav.performance"), href: "/performance" },
+    ],
+    company: [
+      { label: t("nav.about"), href: "/about" },
+      { label: t("nav.faq"), href: "/faq" },
+      { label: t("nav.contact"), href: "/contact" },
+      { label: t("footer.terms"), href: "/terms" },
+    ],
+  };
+
   return (
     <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 py-16">
@@ -30,8 +33,7 @@ export const Footer = () => {
               <span className="font-heading font-bold text-xl">Trade2live</span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
-              Premium Expert Advisor (EA) trading solutions designed for sustainable, 
-              long-term growth with professional risk management.
+              {t("footer.description")}
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all">
@@ -48,7 +50,7 @@ export const Footer = () => {
 
           {/* Products */}
           <div>
-            <h4 className="font-heading font-semibold mb-4">Products</h4>
+            <h4 className="font-heading font-semibold mb-4">{t("footer.products")}</h4>
             <ul className="space-y-3">
               {footerLinks.products.map((link) => (
                 <li key={link.href}>
@@ -65,7 +67,7 @@ export const Footer = () => {
 
           {/* Company */}
           <div>
-            <h4 className="font-heading font-semibold mb-4">Company</h4>
+            <h4 className="font-heading font-semibold mb-4">{t("footer.company")}</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
@@ -85,23 +87,20 @@ export const Footer = () => {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-8">
             <p className="text-sm text-muted-foreground">
-              <span className="text-destructive font-semibold">⚠️ Risk Warning:</span> Trading forex 
-              involves significant risk and may not be suitable for all investors. Past performance 
-              is not indicative of future results. You should carefully consider your investment 
-              objectives, level of experience, and risk appetite before making any investment decisions.
+              <span className="text-destructive font-semibold">⚠️ {t("footer.riskWarning")}</span>
             </p>
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Trade2live. All rights reserved.
+              {t("footer.copyright")}
             </p>
             <div className="flex gap-6">
               <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Terms of Service
+                {t("footer.terms")}
               </Link>
               <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                Privacy Policy
+                {t("footer.privacy")}
               </Link>
             </div>
           </div>

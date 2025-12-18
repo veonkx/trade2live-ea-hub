@@ -1,28 +1,31 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const testimonials = [
   {
-    name: "สมชาย ก.",
-    role: "Trader, 3 ปี",
-    content: "ใช้ ICF$ มา 8 เดือน ผลตอบแทนสม่ำเสมอมาก Drawdown ต่ำกว่าที่คาดไว้ ประทับใจในระบบ Risk Management",
+    name: "ສົມໄຊ ກ.",
+    role: "Trader, 3 ປີ",
+    content: "ໃຊ້ ICF$ ມາ 8 ເດືອນ ຜົນຕອບແທນສະໝ່ຳສະເໝີຫຼາຍ Drawdown ຕ່ຳກວ່າທີ່ຄາດໄວ້ ປະທັບໃຈໃນລະບົບ Risk Management",
     rating: 5,
   },
   {
-    name: "วิภา ส.",
-    role: "นักลงทุน",
-    content: "เริ่มจาก Demo แล้วเห็นผลจริง ตัดสินใจใช้ Real Account ระบบ ZB$ เหมาะกับคนกลัวความเสี่ยงแบบเรามาก",
+    name: "ວິພາ ສ.",
+    role: "ນັກລົງທຶນ",
+    content: "ເລີ່ມຈາກ Demo ແລ້ວເຫັນຜົນຈິງ ຕັດສິນໃຈໃຊ້ Real Account ລະບົບ ZB$ ເໝາະກັບຄົນຢ້ານຄວາມສ່ຽງແບບເຮົາຫຼາຍ",
     rating: 5,
   },
   {
-    name: "ธนพล ม.",
+    name: "ທະນະພົນ ມ.",
     role: "Full-time Trader",
-    content: "Support ดีมาก ตอบไวและช่วยเหลือเรื่อง Setup ทุกอย่าง EA ทำงานได้ตามที่โฆษณาไว้ครับ",
+    content: "Support ດີຫຼາຍ ຕອບໄວແລະຊ່ວຍເຫຼືອເລື່ອງ Setup ທຸກຢ່າງ EA ເຮັດວຽກໄດ້ຕາມທີ່ໂຄສະນາໄວ້ຄັບ",
     rating: 5,
   },
 ];
 
 export const TestimonialsSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-dark" />
@@ -37,13 +40,13 @@ export const TestimonialsSection = () => {
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">
-            Testimonials
+            {t("testimonials.tagline")}
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Trusted by <span className="text-gradient-gold">Traders</span>
+            {t("testimonials.title")}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real feedback from our community of traders using Trade2live EA systems.
+            {t("testimonials.description")}
           </p>
         </motion.div>
 

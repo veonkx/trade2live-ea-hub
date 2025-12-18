@@ -2,8 +2,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, MessageCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const CTASection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -20,24 +23,23 @@ export const CTASection = () => {
           className="max-w-3xl mx-auto text-center"
         >
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
-            Ready to <span className="text-gradient-gold">Automate</span> Your Trading?
+            {t("cta.title")}
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join hundreds of traders who trust Trade2live for consistent, 
-            automated profits. Start with a consultation today.
+            {t("cta.description")}
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
             <Link to="/pricing">
               <Button variant="gold" size="xl" className="group">
-                View Pricing
+                {t("cta.viewPricing")}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link to="/contact">
               <Button variant="glass" size="xl">
                 <MessageCircle className="w-5 h-5" />
-                Contact Us
+                {t("cta.contactUs")}
               </Button>
             </Link>
           </div>

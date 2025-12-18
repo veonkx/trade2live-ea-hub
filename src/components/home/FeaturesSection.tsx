@@ -1,52 +1,55 @@
 import { motion } from "framer-motion";
 import { Shield, TrendingDown, Bot, LineChart, Lock, Clock } from "lucide-react";
-
-const features = [
-  {
-    icon: Shield,
-    title: "Risk Control",
-    description: "Advanced risk management with strict stop-loss and position sizing protocols.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-  },
-  {
-    icon: TrendingDown,
-    title: "Low Drawdown",
-    description: "Historically maintained drawdown below 15%, protecting your capital.",
-    color: "text-profit",
-    bg: "bg-profit/10",
-  },
-  {
-    icon: Bot,
-    title: "Full Automation",
-    description: "24/7 automated trading without emotional decisions or manual intervention.",
-    color: "text-chart",
-    bg: "bg-chart/10",
-  },
-  {
-    icon: LineChart,
-    title: "Verified Performance",
-    description: "Transparent live results tracked and verified through Myfxbook.",
-    color: "text-gold",
-    bg: "bg-gold/10",
-  },
-  {
-    icon: Lock,
-    title: "Secure System",
-    description: "Licensed per account with secure activation and regular updates.",
-    color: "text-primary",
-    bg: "bg-primary/10",
-  },
-  {
-    icon: Clock,
-    title: "Long-term Strategy",
-    description: "Designed for sustainable growth, not quick wins. Built for serious traders.",
-    color: "text-profit",
-    bg: "bg-profit/10",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const FeaturesSection = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: Shield,
+      title: t("features.riskManagement"),
+      description: t("features.riskManagementDesc"),
+      color: "text-primary",
+      bg: "bg-primary/10",
+    },
+    {
+      icon: TrendingDown,
+      title: "Low Drawdown",
+      description: "Historically maintained drawdown below 15%, protecting your capital.",
+      color: "text-profit",
+      bg: "bg-profit/10",
+    },
+    {
+      icon: Bot,
+      title: t("features.autoTrading"),
+      description: t("features.autoTradingDesc"),
+      color: "text-chart",
+      bg: "bg-chart/10",
+    },
+    {
+      icon: LineChart,
+      title: t("features.transparency"),
+      description: t("features.transparencyDesc"),
+      color: "text-gold",
+      bg: "bg-gold/10",
+    },
+    {
+      icon: Lock,
+      title: "Secure System",
+      description: "Licensed per account with secure activation and regular updates.",
+      color: "text-primary",
+      bg: "bg-primary/10",
+    },
+    {
+      icon: Clock,
+      title: "Long-term Strategy",
+      description: "Designed for sustainable growth, not quick wins. Built for serious traders.",
+      color: "text-profit",
+      bg: "bg-profit/10",
+    },
+  ];
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -62,14 +65,13 @@ export const FeaturesSection = () => {
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">
-            Why Choose Us
+            {t("features.tagline")}
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Built for <span className="text-gradient-gold">Sustainable</span> Trading
+            {t("features.title")}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Our Expert Advisors are engineered with professional-grade risk management 
-            and proven strategies for long-term profitability.
+            {t("features.description")}
           </p>
         </motion.div>
 

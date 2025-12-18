@@ -2,39 +2,42 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Zap, Shield } from "lucide-react";
-
-const eaSystems = [
-  {
-    id: "icf",
-    name: "Trade2live ICF$",
-    description: "Intelligent Capital Flow strategy focusing on major currency pairs with momentum-based entries.",
-    stats: {
-      return: "+52%",
-      drawdown: "12%",
-      winRate: "68%",
-    },
-    color: "from-primary to-gold",
-    icon: Zap,
-    link: "/ea/icf",
-    badge: "Popular",
-  },
-  {
-    id: "zb",
-    name: "Trade2live ZB$",
-    description: "Zero-Based risk approach with conservative position sizing for steady, reliable growth.",
-    stats: {
-      return: "+38%",
-      drawdown: "8%",
-      winRate: "72%",
-    },
-    color: "from-profit to-chart",
-    icon: Shield,
-    link: "/ea/zb",
-    badge: "Low Risk",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const EAOverviewSection = () => {
+  const { t } = useLanguage();
+
+  const eaSystems = [
+    {
+      id: "icf",
+      name: t("eaOverview.icf.name"),
+      description: t("eaOverview.icf.description"),
+      stats: {
+        return: "+52%",
+        drawdown: "12%",
+        winRate: "68%",
+      },
+      color: "from-primary to-gold",
+      icon: Zap,
+      link: "/ea/icf",
+      badge: "Popular",
+    },
+    {
+      id: "zb",
+      name: t("eaOverview.zb.name"),
+      description: t("eaOverview.zb.description"),
+      stats: {
+        return: "+38%",
+        drawdown: "8%",
+        winRate: "72%",
+      },
+      color: "from-profit to-chart",
+      icon: Shield,
+      link: "/ea/zb",
+      badge: "Low Risk",
+    },
+  ];
+
   return (
     <section className="py-24 relative">
       <div className="container mx-auto px-4">
@@ -46,14 +49,13 @@ export const EAOverviewSection = () => {
           className="text-center mb-16"
         >
           <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">
-            Our Products
+            {t("eaOverview.tagline")}
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Choose Your <span className="text-gradient-gold">Trading System</span>
+            {t("eaOverview.title")}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Two distinct strategies designed for different risk appetites. 
-            Both verified and consistently profitable.
+            {t("eaOverview.description")}
           </p>
         </motion.div>
 
@@ -97,14 +99,14 @@ export const EAOverviewSection = () => {
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
                     <div className="font-heading text-xl font-bold text-chart">{ea.stats.winRate}</div>
-                    <div className="text-xs text-muted-foreground">Win Rate</div>
+                    <div className="text-xs text-muted-foreground">{t("hero.stat.winRate")}</div>
                   </div>
                 </div>
 
                 {/* CTA */}
                 <Link to={ea.link}>
                   <Button variant="gold-outline" className="w-full group/btn">
-                    Learn More
+                    {t("eaOverview.learnMore")}
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
