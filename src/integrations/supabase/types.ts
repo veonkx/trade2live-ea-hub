@@ -14,16 +14,204 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      license_keys: {
+        Row: {
+          activated_at: string | null
+          broker_name: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          license_key: string
+          mt_account_number: string | null
+          subscription_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          broker_name?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          license_key: string
+          mt_account_number?: string | null
+          subscription_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          broker_name?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          license_key?: string
+          mt_account_number?: string | null
+          subscription_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "license_keys_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string | null
+          id: string
+          notes: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          ea_type: Database["public"]["Enums"]["ea_type"]
+          end_date: string | null
+          id: string
+          max_accounts: number | null
+          package_name: string
+          start_date: string | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ea_type: Database["public"]["Enums"]["ea_type"]
+          end_date?: string | null
+          id?: string
+          max_accounts?: number | null
+          package_name: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ea_type?: Database["public"]["Enums"]["ea_type"]
+          end_date?: string | null
+          id?: string
+          max_accounts?: number | null
+          package_name?: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_license_key: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin_or_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "staff" | "user"
+      ea_type: "icf" | "zb" | "bundle"
+      payment_status: "pending" | "completed" | "failed" | "refunded"
+      subscription_status: "active" | "expired" | "pending" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +338,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "staff", "user"],
+      ea_type: ["icf", "zb", "bundle"],
+      payment_status: ["pending", "completed", "failed", "refunded"],
+      subscription_status: ["active", "expired", "pending", "cancelled"],
+    },
   },
 } as const
