@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Mail, MessageCircle, Facebook } from "lucide-react";
+import { Mail, MessageCircle, Facebook } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import logo from "@/assets/logo.png";
 
 export const Footer = () => {
   const { t } = useLanguage();
@@ -27,10 +28,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="font-heading font-bold text-xl">Trade2live</span>
+              <img src={logo} alt="Trade2live" className="h-10 w-auto" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
               {t("footer.description")}
