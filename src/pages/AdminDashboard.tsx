@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -12,9 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { TrendingUp, LogOut, Users, Package, CreditCard, Key, Search, Plus, Edit, Trash2, Shield, Loader2 } from "lucide-react";
-import { format } from "date-fns";
+import { TrendingUp, LogOut, Users, Package, CreditCard, Key, Search, Plus, Edit, Trash2, Shield, Loader2, BarChart3 } from "lucide-react";
+import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { th } from "date-fns/locale";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from "recharts";
 import type { Database } from "@/integrations/supabase/types";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -244,6 +245,55 @@ const AdminDashboard = () => {
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Calculate monthly statistics for charts
+  const monthlyStats = useMemo(() => {
+    const months = [];
+    const now = new Date();
+    
+    for (let i = 5; i >= 0; i--) {
+      const monthDate = subMonths(now, i);
+      const monthStart = startOfMonth(monthDate);
+      const monthEnd = endOfMonth(monthDate);
+      const monthLabel = format(monthDate, "MMM", { locale: th });
+      
+      // Count new users in this month
+      const newUsers = users.filter((u) => {
+        const createdAt = new Date(u.created_at);
+        return isWithinInterval(createdAt, { start: monthStart, end: monthEnd });
+      }).length;
+      
+      // Count new subscriptions in this month
+      const newSubs = subscriptions.filter((s) => {
+        const createdAt = new Date(s.created_at);
+        return isWithinInterval(createdAt, { start: monthStart, end: monthEnd });
+      }).length;
+      
+      // Calculate revenue (completed payments) in this month
+      const revenue = payments
+        .filter((p) => {
+          const createdAt = new Date(p.created_at);
+          return p.status === "completed" && isWithinInterval(createdAt, { start: monthStart, end: monthEnd });
+        })
+        .reduce((sum, p) => sum + Number(p.amount), 0);
+      
+      months.push({
+        month: monthLabel,
+        users: newUsers,
+        subscriptions: newSubs,
+        revenue: revenue,
+      });
+    }
+    
+    return months;
+  }, [users, subscriptions, payments]);
+
+  // Calculate total revenue
+  const totalRevenue = useMemo(() => {
+    return payments
+      .filter((p) => p.status === "completed")
+      .reduce((sum, p) => sum + Number(p.amount), 0);
+  }, [payments]);
+
   const getStatusBadge = (status: string, type: "subscription" | "payment") => {
     const subVariants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
       active: { variant: "default", label: "ใช้งานอยู่" },
@@ -301,7 +351,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid gap-4 md:grid-cols-4 mb-8">
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5 mb-8">
           <Card className="bg-card border-border">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -344,6 +394,135 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{licenseKeys.filter((k) => k.is_active).length}</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-green-400" />
+                รายได้รวม
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-green-400">฿{totalRevenue.toLocaleString()}</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+          {/* Revenue Chart */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-green-400" />
+                รายได้รายเดือน (฿)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[200px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={monthlyStats}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(222, 30%, 18%)" />
+                    <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: "hsl(222, 47%, 10%)", 
+                        border: "1px solid hsl(222, 30%, 18%)",
+                        borderRadius: "8px"
+                      }}
+                      labelStyle={{ color: "hsl(210, 20%, 95%)" }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="revenue" 
+                      stroke="hsl(142, 76%, 36%)" 
+                      fillOpacity={1} 
+                      fill="url(#colorRevenue)" 
+                      name="รายได้"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Subscriptions Chart */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Package className="w-4 h-4 text-primary" />
+                Subscriptions รายเดือน
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[200px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={monthlyStats}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(222, 30%, 18%)" />
+                    <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: "hsl(222, 47%, 10%)", 
+                        border: "1px solid hsl(222, 30%, 18%)",
+                        borderRadius: "8px"
+                      }}
+                      labelStyle={{ color: "hsl(210, 20%, 95%)" }}
+                    />
+                    <Bar 
+                      dataKey="subscriptions" 
+                      fill="hsl(45, 93%, 47%)" 
+                      radius={[4, 4, 0, 0]}
+                      name="Subscriptions"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Users Chart */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-400" />
+                Users ใหม่รายเดือน
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[200px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={monthlyStats}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(222, 30%, 18%)" />
+                    <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: "hsl(222, 47%, 10%)", 
+                        border: "1px solid hsl(222, 30%, 18%)",
+                        borderRadius: "8px"
+                      }}
+                      labelStyle={{ color: "hsl(210, 20%, 95%)" }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="users" 
+                      stroke="hsl(199, 89%, 48%)" 
+                      strokeWidth={2}
+                      dot={{ fill: "hsl(199, 89%, 48%)", strokeWidth: 2 }}
+                      name="Users ใหม่"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </div>
