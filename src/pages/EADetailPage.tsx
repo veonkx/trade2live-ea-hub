@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, Zap, Shield, Target, Clock, Users, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import icfDashboard from "@/assets/trade2live-icf-dashboard.png";
 
 const eaData = {
   icf: {
@@ -133,6 +134,26 @@ const EADetailPage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Dashboard Screenshot - ICF only */}
+      {id === 'icf' && (
+        <section className="py-12 bg-card">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="rounded-xl overflow-hidden border border-border shadow-2xl"
+            >
+              <img 
+                src={icfDashboard} 
+                alt="Trade2Live ICF$ Dashboard System" 
+                className="w-full h-auto"
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Stats Grid */}
       <section className="py-16 bg-card">
