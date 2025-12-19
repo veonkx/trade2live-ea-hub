@@ -19,6 +19,7 @@ import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminVPSPage from "./pages/AdminVPSPage";
+import AdminVPSSubscriptionsPage from "./pages/AdminVPSSubscriptionsPage";
 import AdminPerformancePage from "./pages/AdminPerformancePage";
 import NotFound from "./pages/NotFound";
 
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/vps" element={<AdminVPSPage />} />
+              <Route path="/admin/vps-subscriptions" element={<AdminVPSSubscriptionsPage />} />
               <Route path="/admin/performance" element={<AdminPerformancePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
