@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import EADetailPage from "./pages/EADetailPage";
+import CopyTradePage from "./pages/CopyTradePage";
 import PricingPage from "./pages/PricingPage";
 import PerformancePage from "./pages/PerformancePage";
 import ContactPage from "./pages/ContactPage";
@@ -29,8 +30,9 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+            <Route path="/" element={<Index />} />
               <Route path="/ea/:id" element={<EADetailPage />} />
+              <Route path="/copy-trade" element={<CopyTradePage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/performance" element={<PerformancePage />} />
               <Route path="/contact" element={<ContactPage />} />
