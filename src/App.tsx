@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminVPSPage from "./pages/AdminVPSPage";
 import AdminVPSSubscriptionsPage from "./pages/AdminVPSSubscriptionsPage";
 import AdminPerformancePage from "./pages/AdminPerformancePage";
+import AdminMT5AccountsPage from "./pages/AdminMT5AccountsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/admin/vps" element={<AdminVPSPage />} />
               <Route path="/admin/vps-subscriptions" element={<AdminVPSSubscriptionsPage />} />
               <Route path="/admin/performance" element={<AdminPerformancePage />} />
+              <Route path="/admin/mt5-accounts" element={<AdminMT5AccountsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

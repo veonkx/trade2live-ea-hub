@@ -8,6 +8,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { MT5InvestorAccounts } from "@/components/performance/MT5InvestorAccounts";
 
 interface PerformanceStats {
   ea_type: string;
@@ -488,7 +489,8 @@ const PerformancePage = () => {
         </div>
       </section>
 
-      {/* Myfxbook Embed Placeholder */}
+      {/* MT5 Investor Accounts */}
+      <MT5InvestorAccounts />
       <section className="py-16">
         <div className="container mx-auto px-4">
           <motion.div
