@@ -76,6 +76,8 @@ const fallbackStats: Record<string, PerformanceStats> = {
   },
 };
 
+type EAFilter = "all" | "icf" | "zb";
+
 const PerformancePage = () => {
   const { t } = useLanguage();
   const [portfolioStats, setPortfolioStats] = useState<Record<string, PerformanceStats>>(fallbackStats);
@@ -83,6 +85,11 @@ const PerformancePage = () => {
   const [equityData, setEquityData] = useState<{ day: number; icf: number; zb: number }[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [eaFilter, setEaFilter] = useState<EAFilter>("all");
+
+  const filteredStats = Object.entries(portfolioStats).filter(([key]) => 
+    eaFilter === "all" || key === eaFilter
+  );
 
   useEffect(() => {
     fetchPerformanceData();
@@ -268,6 +275,34 @@ const PerformancePage = () => {
                 </span>
               </div>
             )}
+
+            {/* EA Type Filter */}
+            <div className="mt-8 flex justify-center gap-2">
+              <Button 
+                variant={eaFilter === "all" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setEaFilter("all")}
+                className="min-w-[80px]"
+              >
+                ทั้งหมด
+              </Button>
+              <Button 
+                variant={eaFilter === "icf" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setEaFilter("icf")}
+                className="min-w-[80px]"
+              >
+                ICF$
+              </Button>
+              <Button 
+                variant={eaFilter === "zb" ? "default" : "outline"} 
+                size="sm"
+                onClick={() => setEaFilter("zb")}
+                className="min-w-[80px]"
+              >
+                ZB$
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -275,8 +310,8 @@ const PerformancePage = () => {
       {/* Portfolio Overview */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {Object.entries(portfolioStats).map(([key, stats]: [string, PerformanceStats], index) => (
+          <div className={`grid gap-8 ${filteredStats.length === 1 ? 'grid-cols-1 max-w-2xl mx-auto' : 'grid-cols-1 lg:grid-cols-2'}`}>
+            {filteredStats.map(([key, stats]: [string, PerformanceStats], index) => (
               <motion.div
                 key={key}
                 initial={{ opacity: 0, y: 30 }}
@@ -453,8 +488,8 @@ const PerformancePage = () => {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {Object.entries(portfolioStats).map(([key, stats]: [string, PerformanceStats], index) => (
+          <div className={`grid gap-8 ${filteredStats.length === 1 ? 'grid-cols-1 max-w-2xl mx-auto' : 'grid-cols-1 lg:grid-cols-2'}`}>
+            {filteredStats.map(([key, stats]: [string, PerformanceStats], index) => (
               <motion.div
                 key={key}
                 initial={{ opacity: 0, y: 20 }}
@@ -490,7 +525,7 @@ const PerformancePage = () => {
       </section>
 
       {/* MT5 Investor Accounts */}
-      <MT5InvestorAccounts />
+      <MT5InvestorAccounts eaFilter={eaFilter} />
       <section className="py-16">
         <div className="container mx-auto px-4">
           <motion.div

@@ -17,12 +17,20 @@ interface MT5Account {
   description: string | null;
 }
 
-export const MT5InvestorAccounts = () => {
+interface MT5InvestorAccountsProps {
+  eaFilter?: "all" | "icf" | "zb";
+}
+
+export const MT5InvestorAccounts = ({ eaFilter = "all" }: MT5InvestorAccountsProps) => {
   const { t } = useLanguage();
   const [accounts, setAccounts] = useState<MT5Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const filteredAccounts = accounts.filter(
+    (account) => eaFilter === "all" || account.ea_type === eaFilter
+  );
 
   useEffect(() => {
     fetchAccounts();
@@ -53,7 +61,7 @@ export const MT5InvestorAccounts = () => {
     return null;
   }
 
-  if (accounts.length === 0) {
+  if (filteredAccounts.length === 0) {
     return null;
   }
 
@@ -75,8 +83,8 @@ export const MT5InvestorAccounts = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {accounts.map((account, index) => (
+        <div className={`grid gap-6 ${filteredAccounts.length === 1 ? 'grid-cols-1 max-w-2xl mx-auto' : 'grid-cols-1 md:grid-cols-2'}`}>
+          {filteredAccounts.map((account, index) => (
             <motion.div
               key={account.id}
               initial={{ opacity: 0, y: 30 }}
