@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const productLinks = [
-  { href: "/ea/icf", label: "ICF$" },
-  { href: "/ea/zb", label: "ZB$" },
+  { href: "/ea/icf", label: "Trade2live ICF$" },
+  { href: "/ea/zb", label: "Trade2Live ZB$" },
+  { href: "/copy-trade", label: "Copy Trade" },
 ];
 
 export const Navbar = () => {
