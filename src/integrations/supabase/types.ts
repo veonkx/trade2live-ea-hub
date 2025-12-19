@@ -202,6 +202,12 @@ export type Database = {
           mt_accounts: number
           name: string
           os_type: string
+          price_12m_lak: number
+          price_12m_usd: number
+          price_3m_lak: number
+          price_3m_usd: number
+          price_6m_lak: number
+          price_6m_usd: number
           price_lak: number
           price_usd: number
           ram: string
@@ -218,6 +224,12 @@ export type Database = {
           mt_accounts?: number
           name: string
           os_type?: string
+          price_12m_lak?: number
+          price_12m_usd?: number
+          price_3m_lak?: number
+          price_3m_usd?: number
+          price_6m_lak?: number
+          price_6m_usd?: number
           price_lak?: number
           price_usd?: number
           ram?: string
@@ -234,6 +246,12 @@ export type Database = {
           mt_accounts?: number
           name?: string
           os_type?: string
+          price_12m_lak?: number
+          price_12m_usd?: number
+          price_3m_lak?: number
+          price_3m_usd?: number
+          price_6m_lak?: number
+          price_6m_usd?: number
           price_lak?: number
           price_usd?: number
           ram?: string
