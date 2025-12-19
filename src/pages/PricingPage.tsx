@@ -31,9 +31,9 @@ const plans = [
     durationKey: "pricing.duration.12months",
     popular: false,
     prices: {
-      icf: { price: 369, per: "$31/mo" },
-      zb: { price: 309, per: "$26/mo" },
-      bundle: { price: 569, per: "$47/mo" },
+      icf: { price: 300, per: "$25/mo" },
+      zb: { price: 300, per: "$25/mo" },
+      bundle: { price: 500, per: "$42/mo" },
     },
   },
 ];
