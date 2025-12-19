@@ -336,6 +336,10 @@ const AdminDashboard = () => {
             </Badge>
           </a>
           <div className="flex items-center gap-4">
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/performance")}>
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Performance
+            </Button>
             <Button variant="outline" size="sm" onClick={() => navigate("/admin/vps")}>
               <Server className="w-4 h-4 mr-2" />
               VPS Plans
