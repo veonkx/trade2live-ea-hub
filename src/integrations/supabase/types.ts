@@ -172,6 +172,51 @@ export type Database = {
           },
         ]
       }
+      mt5_investor_accounts: {
+        Row: {
+          account_name: string
+          account_number: string
+          broker_name: string | null
+          created_at: string
+          description: string | null
+          ea_type: string
+          id: string
+          investor_password: string
+          is_active: boolean
+          server_name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          broker_name?: string | null
+          created_at?: string
+          description?: string | null
+          ea_type?: string
+          id?: string
+          investor_password: string
+          is_active?: boolean
+          server_name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          broker_name?: string | null
+          created_at?: string
+          description?: string | null
+          ea_type?: string
+          id?: string
+          investor_password?: string
+          is_active?: boolean
+          server_name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number

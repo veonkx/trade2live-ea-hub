@@ -348,6 +348,10 @@ const AdminDashboard = () => {
               <Users className="w-4 h-4 mr-2" />
               VPS Subscriptions
             </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/mt5-accounts")}>
+              <TrendingUp className="w-4 h-4 mr-2" />
+              MT5 Accounts
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ
