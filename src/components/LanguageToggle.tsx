@@ -23,13 +23,13 @@ export const LanguageToggle = () => {
           onClick={() => setLanguage("en")}
           className={language === "en" ? "text-primary bg-primary/10" : ""}
         >
-          🇬🇧 English
+          English
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setLanguage("lo")}
           className={language === "lo" ? "text-primary bg-primary/10" : ""}
         >
-          🇱🇦 ລາວ
+          ລາວ
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
