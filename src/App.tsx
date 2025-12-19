@@ -17,6 +17,7 @@ import FAQPage from "./pages/FAQPage";
 import TermsPage from "./pages/TermsPage";
 import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
+import MyVPSPage from "./pages/MyVPSPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminVPSPage from "./pages/AdminVPSPage";
 import AdminVPSSubscriptionsPage from "./pages/AdminVPSSubscriptionsPage";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/my-vps" element={<MyVPSPage />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/vps" element={<AdminVPSPage />} />
               <Route path="/admin/vps-subscriptions" element={<AdminVPSSubscriptionsPage />} />
