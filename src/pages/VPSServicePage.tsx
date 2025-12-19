@@ -1,13 +1,57 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Server, Shield, Zap, Clock, Globe, Headphones, CheckCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Server, Shield, Zap, Clock, Globe, Headphones, CheckCircle, Loader2 } from "lucide-react";
+
+interface VPSPlan {
+  id: string;
+  name: string;
+  price_usd: number;
+  price_lak: number;
+  ram: string;
+  cpu: string;
+  storage: string;
+  mt_accounts: number;
+  is_popular: boolean;
+}
 
 const VPSServicePage = () => {
   const { language } = useLanguage();
   const isLao = language === 'lo';
+  const [plans, setPlans] = useState<VPSPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlans();
+  }, []);
+
+  const fetchPlans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("vps_plans")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
+
+      if (error) throw error;
+      setPlans(data || []);
+    } catch (error) {
+      console.error("Error fetching VPS plans:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatPrice = (plan: VPSPlan) => {
+    if (isLao) {
+      return `₭${plan.price_lak.toLocaleString()}`;
+    }
+    return `$${plan.price_usd}`;
+  };
 
   const features = [
     {
@@ -51,45 +95,6 @@ const VPSServicePage = () => {
       description: isLao
         ? "ທີມງານພ້ອມຊ່ວຍເຫຼືອທ່ານຕະຫຼອດເວລາ"
         : "Our team is ready to assist you anytime"
-    },
-  ];
-
-  const plans = [
-    {
-      name: "Basic",
-      price: isLao ? "₭150,000" : "$15",
-      period: isLao ? "/ເດືອນ" : "/month",
-      specs: [
-        { label: "RAM", value: "2 GB" },
-        { label: "CPU", value: "1 Core" },
-        { label: "Storage", value: "30 GB SSD" },
-        { label: "MT4/MT5", value: "1" },
-      ],
-      popular: false,
-    },
-    {
-      name: "Standard",
-      price: isLao ? "₭250,000" : "$25",
-      period: isLao ? "/ເດືອນ" : "/month",
-      specs: [
-        { label: "RAM", value: "4 GB" },
-        { label: "CPU", value: "2 Cores" },
-        { label: "Storage", value: "50 GB SSD" },
-        { label: "MT4/MT5", value: "2" },
-      ],
-      popular: true,
-    },
-    {
-      name: "Pro",
-      price: isLao ? "₭450,000" : "$45",
-      period: isLao ? "/ເດືອນ" : "/month",
-      specs: [
-        { label: "RAM", value: "8 GB" },
-        { label: "CPU", value: "4 Cores" },
-        { label: "Storage", value: "100 GB SSD" },
-        { label: "MT4/MT5", value: "4" },
-      ],
-      popular: false,
     },
   ];
 
@@ -185,66 +190,82 @@ const VPSServicePage = () => {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {plans.map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`relative p-6 rounded-2xl border ${
-                  plan.popular 
-                    ? "border-primary bg-primary/5" 
-                    : "border-border bg-card"
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary rounded-full text-xs font-semibold text-primary-foreground">
-                    {isLao ? "ແນະນຳ" : "Popular"}
-                  </div>
-                )}
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-bold text-primary">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
-                  </div>
-                </div>
-                <div className="space-y-3 mb-6">
-                  {plan.specs.map((spec) => (
-                    <div key={spec.label} className="flex items-center justify-between">
-                      <span className="text-muted-foreground">{spec.label}</span>
-                      <span className="font-semibold">{spec.value}</span>
-                    </div>
-                  ))}
-                </div>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-chart-2" />
-                    <span>{isLao ? "ຮອງຮັບ Windows" : "Windows Support"}</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-chart-2" />
-                    <span>Remote Desktop</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-chart-2" />
-                    <span>{isLao ? "ຊັບພອດ 24/7" : "24/7 Support"}</span>
-                  </li>
-                </ul>
-                <Button 
-                  variant={plan.popular ? "gold" : "outline"} 
-                  className="w-full"
-                  asChild
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {plans.map((plan, index) => (
+                <motion.div
+                  key={plan.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`relative p-6 rounded-2xl border ${
+                    plan.is_popular 
+                      ? "border-primary bg-primary/5" 
+                      : "border-border bg-card"
+                  }`}
                 >
-                  <Link to="/contact">
-                    {isLao ? "ສະໝັກໃຊ້ງານ" : "Subscribe"}
-                  </Link>
-                </Button>
-              </motion.div>
-            ))}
-          </div>
+                  {plan.is_popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary rounded-full text-xs font-semibold text-primary-foreground">
+                      {isLao ? "ແນະນຳ" : "Popular"}
+                    </div>
+                  )}
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                    <div className="flex items-baseline justify-center gap-1">
+                      <span className="text-4xl font-bold text-primary">{formatPrice(plan)}</span>
+                      <span className="text-muted-foreground">{isLao ? "/ເດືອນ" : "/month"}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">RAM</span>
+                      <span className="font-semibold">{plan.ram}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">CPU</span>
+                      <span className="font-semibold">{plan.cpu}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Storage</span>
+                      <span className="font-semibold">{plan.storage}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">MT4/MT5</span>
+                      <span className="font-semibold">{plan.mt_accounts}</span>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-center gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-chart-2" />
+                      <span>{isLao ? "ຮອງຮັບ Windows" : "Windows Support"}</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-chart-2" />
+                      <span>Remote Desktop</span>
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-chart-2" />
+                      <span>{isLao ? "ຊັບພອດ 24/7" : "24/7 Support"}</span>
+                    </li>
+                  </ul>
+                  <Button 
+                    variant={plan.is_popular ? "gold" : "outline"} 
+                    className="w-full"
+                    asChild
+                  >
+                    <Link to="/contact">
+                      {isLao ? "ສະໝັກໃຊ້ງານ" : "Subscribe"}
+                    </Link>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
