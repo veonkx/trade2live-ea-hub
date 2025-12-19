@@ -16,76 +16,88 @@ import {
   Star,
   Target
 } from "lucide-react";
-
-const features = [
-  {
-    icon: Copy,
-    title: "Easy Copy Trading",
-    description: "Copy trades from professional traders automatically. No trading experience required.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Proven Performance",
-    description: "Follow traders with verified track records and consistent profitability.",
-  },
-  {
-    icon: Shield,
-    title: "Risk Management",
-    description: "Set your own risk limits and stop-loss parameters for complete control.",
-  },
-  {
-    icon: Zap,
-    title: "Real-time Execution",
-    description: "Trades are copied instantly to your account with minimal latency.",
-  },
-];
-
-const stats = [
-  { value: "500+", label: "Active Copiers" },
-  { value: "85%", label: "Win Rate" },
-  { value: "$2M+", label: "Copied Volume" },
-  { value: "24/7", label: "Auto Trading" },
-];
-
-const benefits = [
-  "No trading experience needed",
-  "Automatic position sizing",
-  "Real-time trade copying",
-  "Choose from multiple signal providers",
-  "Set your own risk limits",
-  "Transparent performance history",
-  "Easy setup in minutes",
-  "Works with any MT4/MT5 broker",
-];
-
-const howItWorks = [
-  {
-    step: 1,
-    title: "Choose a Signal Provider",
-    description: "Browse our verified traders and select one that matches your risk tolerance and trading style.",
-    icon: Users,
-  },
-  {
-    step: 2,
-    title: "Connect Your Account",
-    description: "Link your MT4/MT5 trading account securely. Your funds stay with your broker.",
-    icon: Target,
-  },
-  {
-    step: 3,
-    title: "Set Your Parameters",
-    description: "Configure your lot size, risk limits, and which pairs to copy. Full control is yours.",
-    icon: BarChart3,
-  },
-  {
-    step: 4,
-    title: "Start Copying",
-    description: "Trades are automatically copied to your account in real-time. Sit back and watch.",
-    icon: Zap,
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const CopyTradePage = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: Copy,
+      titleKey: "copyTrade.features.easy.title",
+      descKey: "copyTrade.features.easy.desc",
+    },
+    {
+      icon: TrendingUp,
+      titleKey: "copyTrade.features.proven.title",
+      descKey: "copyTrade.features.proven.desc",
+    },
+    {
+      icon: Shield,
+      titleKey: "copyTrade.features.risk.title",
+      descKey: "copyTrade.features.risk.desc",
+    },
+    {
+      icon: Zap,
+      titleKey: "copyTrade.features.realtime.title",
+      descKey: "copyTrade.features.realtime.desc",
+    },
+  ];
+
+  const stats = [
+    { valueKey: "copyTrade.stats.copiers.value", labelKey: "copyTrade.stats.copiers.label" },
+    { valueKey: "copyTrade.stats.winRate.value", labelKey: "copyTrade.stats.winRate.label" },
+    { valueKey: "copyTrade.stats.volume.value", labelKey: "copyTrade.stats.volume.label" },
+    { valueKey: "copyTrade.stats.trading.value", labelKey: "copyTrade.stats.trading.label" },
+  ];
+
+  const benefitKeys = [
+    "copyTrade.benefits.noExperience",
+    "copyTrade.benefits.autoSizing",
+    "copyTrade.benefits.realtime",
+    "copyTrade.benefits.multiProviders",
+    "copyTrade.benefits.riskLimits",
+    "copyTrade.benefits.transparent",
+    "copyTrade.benefits.easySetup",
+    "copyTrade.benefits.anyBroker",
+  ];
+
+  const howItWorks = [
+    {
+      step: 1,
+      titleKey: "copyTrade.howItWorks.step1.title",
+      descKey: "copyTrade.howItWorks.step1.desc",
+      icon: Users,
+    },
+    {
+      step: 2,
+      titleKey: "copyTrade.howItWorks.step2.title",
+      descKey: "copyTrade.howItWorks.step2.desc",
+      icon: Target,
+    },
+    {
+      step: 3,
+      titleKey: "copyTrade.howItWorks.step3.title",
+      descKey: "copyTrade.howItWorks.step3.desc",
+      icon: BarChart3,
+    },
+    {
+      step: 4,
+      titleKey: "copyTrade.howItWorks.step4.title",
+      descKey: "copyTrade.howItWorks.step4.desc",
+      icon: Zap,
+    },
+  ];
+
+  const pricingFeatureKeys = [
+    "copyTrade.pricing.features.unlimited",
+    "copyTrade.pricing.features.multiProviders",
+    "copyTrade.pricing.features.realtime",
+    "copyTrade.pricing.features.riskTools",
+    "copyTrade.pricing.features.support",
+    "copyTrade.pricing.features.analytics",
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -103,29 +115,28 @@ const CopyTradePage = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-chart/10 border border-chart/20 text-chart text-sm font-medium mb-6">
               <Copy className="w-4 h-4" />
-              Copy Trade Service
+              {t("copyTrade.badge")}
             </div>
 
             <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6">
-              Copy Professional Traders{" "}
-              <span className="text-gradient-gold">Automatically</span>
+              {t("copyTrade.hero.title")}{" "}
+              <span className="text-gradient-gold">{t("copyTrade.hero.titleHighlight")}</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Don't have time to trade? Let our expert traders do it for you. 
-              Copy their trades automatically and grow your account with minimal effort.
+              {t("copyTrade.hero.description")}
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <Link to="/pricing">
                 <Button variant="gold" size="xl" className="group">
-                  Start Copy Trading
+                  {t("copyTrade.hero.startButton")}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/contact">
                 <Button variant="glass" size="xl">
-                  Ask Questions
+                  {t("copyTrade.hero.askButton")}
                 </Button>
               </Link>
             </div>
@@ -134,16 +145,16 @@ const CopyTradePage = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               {stats.map((stat, index) => (
                 <motion.div
-                  key={stat.label}
+                  key={stat.labelKey}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
                   className="stat-card text-center"
                 >
                   <div className="font-heading text-2xl md:text-3xl font-bold text-profit">
-                    {stat.value}
+                    {t(stat.valueKey)}
                   </div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground">{t(stat.labelKey)}</div>
                 </motion.div>
               ))}
             </div>
@@ -161,17 +172,17 @@ const CopyTradePage = () => {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-              Why Choose <span className="text-gradient-gold">Copy Trade</span>?
+              {t("copyTrade.whyChoose.title")} <span className="text-gradient-gold">{t("copyTrade.whyChoose.titleHighlight")}</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Experience the benefits of professional trading without the learning curve.
+              {t("copyTrade.whyChoose.description")}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div
-                key={feature.title}
+                key={feature.titleKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -181,8 +192,8 @@ const CopyTradePage = () => {
                 <div className="w-14 h-14 rounded-2xl bg-chart/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-chart/20 transition-colors">
                   <feature.icon className="w-7 h-7 text-chart" />
                 </div>
-                <h3 className="font-heading text-lg font-bold mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <h3 className="font-heading text-lg font-bold mb-2">{t(feature.titleKey)}</h3>
+                <p className="text-sm text-muted-foreground">{t(feature.descKey)}</p>
               </motion.div>
             ))}
           </div>
@@ -199,10 +210,10 @@ const CopyTradePage = () => {
             className="text-center mb-16"
           >
             <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-              How It <span className="text-gradient-gold">Works</span>
+              {t("copyTrade.howItWorks.title")} <span className="text-gradient-gold">{t("copyTrade.howItWorks.titleHighlight")}</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Get started in four simple steps and begin copying trades today.
+              {t("copyTrade.howItWorks.description")}
             </p>
           </motion.div>
 
@@ -227,8 +238,8 @@ const CopyTradePage = () => {
                       {item.step}
                     </span>
                   </div>
-                  <h3 className="font-heading text-lg font-bold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <h3 className="font-heading text-lg font-bold mb-2">{t(item.titleKey)}</h3>
+                  <p className="text-sm text-muted-foreground">{t(item.descKey)}</p>
                 </div>
               </motion.div>
             ))}
@@ -246,18 +257,17 @@ const CopyTradePage = () => {
               viewport={{ once: true }}
             >
               <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6">
-                Everything You Need to{" "}
-                <span className="text-gradient-gold">Succeed</span>
+                {t("copyTrade.benefits.title")}{" "}
+                <span className="text-gradient-gold">{t("copyTrade.benefits.titleHighlight")}</span>
               </h2>
               <p className="text-muted-foreground mb-8">
-                Our copy trading service is designed to make automated trading accessible 
-                to everyone, regardless of experience level.
+                {t("copyTrade.benefits.description")}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {benefits.map((benefit, index) => (
+                {benefitKeys.map((key, index) => (
                   <motion.div
-                    key={benefit}
+                    key={key}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -265,7 +275,7 @@ const CopyTradePage = () => {
                     className="flex items-center gap-3"
                   >
                     <CheckCircle className="w-5 h-5 text-profit flex-shrink-0" />
-                    <span className="text-sm">{benefit}</span>
+                    <span className="text-sm">{t(key)}</span>
                   </motion.div>
                 ))}
               </div>
@@ -282,8 +292,8 @@ const CopyTradePage = () => {
                   <Star className="w-8 h-8 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-xl font-bold">Pro Signal Provider</h3>
-                  <p className="text-sm text-muted-foreground">Top Performing Trader</p>
+                  <h3 className="font-heading text-xl font-bold">{t("copyTrade.provider.title")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("copyTrade.provider.subtitle")}</p>
                 </div>
               </div>
 
@@ -291,28 +301,28 @@ const CopyTradePage = () => {
                 <div className="flex justify-between py-3 border-b border-border">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <TrendingUp className="w-4 h-4" />
-                    Monthly Return
+                    {t("copyTrade.provider.monthlyReturn")}
                   </span>
                   <span className="font-bold text-profit">+12.5%</span>
                 </div>
                 <div className="flex justify-between py-3 border-b border-border">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <Target className="w-4 h-4" />
-                    Win Rate
+                    {t("copyTrade.provider.winRate")}
                   </span>
                   <span className="font-bold">85%</span>
                 </div>
                 <div className="flex justify-between py-3 border-b border-border">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    Trading Since
+                    {t("copyTrade.provider.tradingSince")}
                   </span>
                   <span className="font-bold">2019</span>
                 </div>
                 <div className="flex justify-between py-3">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    Active Copiers
+                    {t("copyTrade.provider.activeCopiers")}
                   </span>
                   <span className="font-bold">248</span>
                 </div>
@@ -320,7 +330,7 @@ const CopyTradePage = () => {
 
               <Button variant="gold" className="w-full mt-6">
                 <Copy className="w-4 h-4 mr-2" />
-                Copy This Trader
+                {t("copyTrade.provider.copyButton")}
               </Button>
             </motion.div>
           </div>
@@ -337,10 +347,10 @@ const CopyTradePage = () => {
             className="text-center mb-12"
           >
             <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-              Simple <span className="text-gradient-gold">Pricing</span>
+              {t("copyTrade.pricing.title")} <span className="text-gradient-gold">{t("copyTrade.pricing.titleHighlight")}</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Choose a plan that fits your trading needs. No hidden fees.
+              {t("copyTrade.pricing.description")}
             </p>
           </motion.div>
 
@@ -358,32 +368,25 @@ const CopyTradePage = () => {
                 </div>
                 <div className="flex items-end justify-center gap-1 mb-2">
                   <span className="font-heading text-4xl font-bold">$49</span>
-                  <span className="text-muted-foreground mb-1">/month</span>
+                  <span className="text-muted-foreground mb-1">/{t("copyTrade.pricing.perMonth")}</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Full access to copy trading service
+                  {t("copyTrade.pricing.fullAccess")}
                 </p>
               </div>
 
               <ul className="space-y-3 mb-8">
-                {[
-                  "Unlimited trade copying",
-                  "Multiple signal providers",
-                  "Real-time execution",
-                  "Risk management tools",
-                  "24/7 support",
-                  "Performance analytics",
-                ].map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
+                {pricingFeatureKeys.map((key) => (
+                  <li key={key} className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-profit flex-shrink-0" />
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-sm">{t(key)}</span>
                   </li>
                 ))}
               </ul>
 
               <Link to="/pricing" className="block">
                 <Button variant="gold" size="lg" className="w-full">
-                  Get Started
+                  {t("copyTrade.pricing.getStarted")}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
@@ -401,21 +404,20 @@ const CopyTradePage = () => {
             viewport={{ once: true }}
           >
             <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-              Ready to Start <span className="text-gradient-gold">Copy Trading</span>?
+              {t("copyTrade.cta.title")} <span className="text-gradient-gold">{t("copyTrade.cta.titleHighlight")}</span>
             </h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-              Join hundreds of traders who are already copying our expert signals 
-              and growing their accounts automatically.
+              {t("copyTrade.cta.description")}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/pricing">
                 <Button variant="gold" size="xl">
-                  View All Plans
+                  {t("copyTrade.cta.viewPlans")}
                 </Button>
               </Link>
               <Link to="/contact">
                 <Button variant="glass" size="xl">
-                  Contact Us
+                  {t("copyTrade.cta.contactUs")}
                 </Button>
               </Link>
             </div>

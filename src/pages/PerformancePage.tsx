@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { TrendingUp, TrendingDown, BarChart3, Calendar, Target, Activity } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const monthlyData = [
   { month: "Jan", icf: 4.2, zb: 3.1 },
@@ -66,6 +67,8 @@ const portfolioStats = {
 };
 
 const PerformancePage = () => {
+  const { t } = useLanguage();
+
   return (
     <Layout>
       {/* Hero */}
@@ -81,14 +84,13 @@ const PerformancePage = () => {
             className="text-center max-w-3xl mx-auto"
           >
             <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">
-              Live Performance
+              {t("performance.label")}
             </span>
             <h1 className="font-heading text-4xl md:text-6xl font-bold mb-4">
-              Verified <span className="text-gradient-gold">Results</span>
+              {t("performance.title")} <span className="text-gradient-gold">{t("performance.titleHighlight")}</span>
             </h1>
             <p className="text-lg text-muted-foreground">
-              Real-time performance data from our live trading accounts. 
-              All results are tracked and verified through Myfxbook.
+              {t("performance.description")}
             </p>
           </motion.div>
         </div>
@@ -125,26 +127,26 @@ const PerformancePage = () => {
                   </div>
                   <div className="text-right">
                     <div className="font-heading text-3xl font-bold text-profit">{stats.totalReturn}</div>
-                    <div className="text-sm text-muted-foreground">Total Return</div>
+                    <div className="text-sm text-muted-foreground">{t("performance.totalReturn")}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-4 gap-4">
                   <div className="text-center p-3 rounded-lg bg-background/50">
                     <div className="font-heading text-lg font-bold">{stats.monthlyAvg}</div>
-                    <div className="text-xs text-muted-foreground">Monthly Avg</div>
+                    <div className="text-xs text-muted-foreground">{t("performance.monthlyAvg")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
                     <div className="font-heading text-lg font-bold text-primary">{stats.maxDrawdown}</div>
-                    <div className="text-xs text-muted-foreground">Max DD</div>
+                    <div className="text-xs text-muted-foreground">{t("performance.maxDD")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
                     <div className="font-heading text-lg font-bold">{stats.winRate}</div>
-                    <div className="text-xs text-muted-foreground">Win Rate</div>
+                    <div className="text-xs text-muted-foreground">{t("performance.winRate")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
                     <div className="font-heading text-lg font-bold">{stats.profitFactor}</div>
-                    <div className="text-xs text-muted-foreground">Profit Factor</div>
+                    <div className="text-xs text-muted-foreground">{t("performance.profitFactor")}</div>
                   </div>
                 </div>
               </motion.div>
@@ -164,9 +166,9 @@ const PerformancePage = () => {
           >
             <h2 className="font-heading text-2xl font-bold flex items-center gap-3">
               <Activity className="w-6 h-6 text-primary" />
-              Equity Curve (12 Months)
+              {t("performance.equityCurve")}
             </h2>
-            <p className="text-muted-foreground">Starting balance: $10,000</p>
+            <p className="text-muted-foreground">{t("performance.startingBalance")}</p>
           </motion.div>
 
           <motion.div
@@ -229,7 +231,7 @@ const PerformancePage = () => {
           >
             <h2 className="font-heading text-2xl font-bold flex items-center gap-3">
               <Calendar className="w-6 h-6 text-primary" />
-              Monthly Returns (%)
+              {t("performance.monthlyReturns")}
             </h2>
           </motion.div>
 
@@ -271,7 +273,7 @@ const PerformancePage = () => {
           >
             <h2 className="font-heading text-2xl font-bold flex items-center gap-3">
               <BarChart3 className="w-6 h-6 text-primary" />
-              Detailed Statistics
+              {t("performance.detailedStats")}
             </h2>
           </motion.div>
 
@@ -290,17 +292,17 @@ const PerformancePage = () => {
                 </h3>
                 <div className="space-y-4">
                   {[
-                    { label: "Total Return", value: stats.totalReturn },
-                    { label: "Monthly Average", value: stats.monthlyAvg },
-                    { label: "Max Drawdown", value: stats.maxDrawdown },
-                    { label: "Win Rate", value: stats.winRate },
-                    { label: "Profit Factor", value: stats.profitFactor },
-                    { label: "Total Trades", value: stats.totalTrades },
-                    { label: "Trading Days", value: stats.tradingDays },
-                    { label: "Sharpe Ratio", value: stats.sharpeRatio },
+                    { labelKey: "performance.stats.totalReturn", value: stats.totalReturn },
+                    { labelKey: "performance.stats.monthlyAverage", value: stats.monthlyAvg },
+                    { labelKey: "performance.stats.maxDrawdown", value: stats.maxDrawdown },
+                    { labelKey: "performance.stats.winRate", value: stats.winRate },
+                    { labelKey: "performance.stats.profitFactor", value: stats.profitFactor },
+                    { labelKey: "performance.stats.totalTrades", value: stats.totalTrades },
+                    { labelKey: "performance.stats.tradingDays", value: stats.tradingDays },
+                    { labelKey: "performance.stats.sharpeRatio", value: stats.sharpeRatio },
                   ].map((item) => (
-                    <div key={item.label} className="flex justify-between py-2 border-b border-border last:border-0">
-                      <span className="text-muted-foreground">{item.label}</span>
+                    <div key={item.labelKey} className="flex justify-between py-2 border-b border-border last:border-0">
+                      <span className="text-muted-foreground">{t(item.labelKey)}</span>
                       <span className="font-medium">{item.value}</span>
                     </div>
                   ))}
@@ -321,12 +323,12 @@ const PerformancePage = () => {
             className="stat-card text-center py-12"
           >
             <Target className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h3 className="font-heading text-xl font-bold mb-2">Live Myfxbook Verification</h3>
+            <h3 className="font-heading text-xl font-bold mb-2">{t("performance.myfxbook.title")}</h3>
             <p className="text-muted-foreground mb-6">
-              View our fully verified live trading results on Myfxbook
+              {t("performance.myfxbook.description")}
             </p>
             <Button variant="gold-outline">
-              View on Myfxbook
+              {t("performance.myfxbook.button")}
             </Button>
           </motion.div>
         </div>
@@ -336,13 +338,13 @@ const PerformancePage = () => {
       <section className="py-24 bg-card">
         <div className="container mx-auto px-4 text-center">
           <h2 className="font-heading text-3xl font-bold mb-4">
-            Start Trading with <span className="text-gradient-gold">Proven Results</span>
+            {t("performance.cta.title")} <span className="text-gradient-gold">{t("performance.cta.titleHighlight")}</span>
           </h2>
           <p className="text-muted-foreground mb-8">
-            Join our growing community of successful automated traders.
+            {t("performance.cta.description")}
           </p>
           <Link to="/pricing">
-            <Button variant="gold" size="xl">View Pricing</Button>
+            <Button variant="gold" size="xl">{t("performance.cta.button")}</Button>
           </Link>
         </div>
       </section>
