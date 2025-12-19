@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { TrendingUp, LogOut, Users, Package, CreditCard, Key, Search, Plus, Edit, Trash2, Shield, Loader2, BarChart3 } from "lucide-react";
+import { TrendingUp, LogOut, Users, Package, CreditCard, Key, Search, Plus, Edit, Trash2, Shield, Loader2, BarChart3, Server } from "lucide-react";
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { th } from "date-fns/locale";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from "recharts";
@@ -336,6 +336,10 @@ const AdminDashboard = () => {
             </Badge>
           </a>
           <div className="flex items-center gap-4">
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/vps")}>
+              <Server className="w-4 h-4 mr-2" />
+              VPS Plans
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ

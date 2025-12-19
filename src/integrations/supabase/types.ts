@@ -192,6 +192,54 @@ export type Database = {
         }
         Relationships: []
       }
+      vps_plans: {
+        Row: {
+          cpu: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_popular: boolean
+          mt_accounts: number
+          name: string
+          price_lak: number
+          price_usd: number
+          ram: string
+          sort_order: number
+          storage: string
+          updated_at: string
+        }
+        Insert: {
+          cpu?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          mt_accounts?: number
+          name: string
+          price_lak?: number
+          price_usd?: number
+          ram?: string
+          sort_order?: number
+          storage?: string
+          updated_at?: string
+        }
+        Update: {
+          cpu?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          mt_accounts?: number
+          name?: string
+          price_lak?: number
+          price_usd?: number
+          ram?: string
+          sort_order?: number
+          storage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
