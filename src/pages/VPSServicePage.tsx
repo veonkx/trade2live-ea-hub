@@ -16,6 +16,7 @@ interface VPSPlan {
   cpu: string;
   storage: string;
   mt_accounts: number;
+  os_type: string;
   is_popular: boolean;
 }
 
@@ -235,15 +236,15 @@ const VPSServicePage = () => {
                       <span className="font-semibold">{plan.storage}</span>
                     </div>
                     <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">OS</span>
+                      <span className="font-semibold text-right text-xs">{plan.os_type}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">MT4/MT5</span>
                       <span className="font-semibold">{plan.mt_accounts}</span>
                     </div>
                   </div>
                   <ul className="space-y-2 mb-6">
-                    <li className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-chart-2" />
-                      <span>{isLao ? "ຮອງຮັບ Windows" : "Windows Support"}</span>
-                    </li>
                     <li className="flex items-center gap-2 text-sm">
                       <CheckCircle className="w-4 h-4 text-chart-2" />
                       <span>Remote Desktop</span>

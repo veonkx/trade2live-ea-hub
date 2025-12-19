@@ -201,6 +201,7 @@ export type Database = {
           is_popular: boolean
           mt_accounts: number
           name: string
+          os_type: string
           price_lak: number
           price_usd: number
           ram: string
@@ -216,6 +217,7 @@ export type Database = {
           is_popular?: boolean
           mt_accounts?: number
           name: string
+          os_type?: string
           price_lak?: number
           price_usd?: number
           ram?: string
@@ -231,6 +233,7 @@ export type Database = {
           is_popular?: boolean
           mt_accounts?: number
           name?: string
+          os_type?: string
           price_lak?: number
           price_usd?: number
           ram?: string
