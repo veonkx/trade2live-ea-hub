@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, LogOut, User, Package, Key, CreditCard, Shield } from "lucide-react";
+import { TrendingUp, LogOut, User, Package, Key, CreditCard, Shield, Server } from "lucide-react";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import type { Database } from "@/integrations/supabase/types";
@@ -134,6 +134,12 @@ const DashboardPage = () => {
                 </Link>
               </Button>
             )}
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/my-vps">
+                <Server className="w-4 h-4 mr-2" />
+                VPS ของฉัน
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ
