@@ -53,16 +53,27 @@ export const HeroSection = () => {
             <span className="text-gradient-gold">{t("hero.titleHighlight")}</span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-xl md:text-2xl font-medium text-primary/90 italic mb-6"
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.15, type: "spring", stiffness: 100 }}
+            className="mb-6 relative"
           >
-            "Trade to Live, Not Live to Trade"
-            <br />
-            <span className="text-muted-foreground text-lg">Trade เพื่อใช้ชีวิต ไม่ใช่ใช้ชีวิตเพื่อ Trade</span>
-          </motion.p>
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-gold/10 to-primary/20 rounded-2xl blur-xl opacity-50 animate-pulse-slow" />
+            <p className="relative text-xl md:text-2xl lg:text-3xl font-semibold italic">
+              <span className="text-gradient-gold-shimmer animate-text-glow">
+                "Trade to Live, Not Live to Trade"
+              </span>
+            </p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="relative text-muted-foreground text-base md:text-lg mt-2"
+            >
+              Trade เพื่อใช้ชีวิต ไม่ใช่ใช้ชีวิตเพื่อ Trade
+            </motion.p>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
