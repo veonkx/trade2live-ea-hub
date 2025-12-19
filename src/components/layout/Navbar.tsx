@@ -18,6 +18,7 @@ const productLinks = [
   { href: "/ea/icf", label: "Trade2live ICF$" },
   { href: "/ea/zb", label: "Trade2Live ZB$" },
   { href: "/copy-trade", label: "Copy Trade" },
+  { href: "/vpn-service", label: "VPN Service" },
 ];
 
 export const Navbar = () => {
