@@ -378,6 +378,62 @@ export type Database = {
         }
         Relationships: []
       }
+      vps_subscriptions: {
+        Row: {
+          created_at: string
+          end_date: string
+          id: string
+          ip_address: string | null
+          notes: string | null
+          password: string | null
+          plan_name: string
+          start_date: string
+          status: string
+          updated_at: string
+          user_id: string
+          username: string | null
+          vps_plan_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          id?: string
+          ip_address?: string | null
+          notes?: string | null
+          password?: string | null
+          plan_name: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          username?: string | null
+          vps_plan_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          id?: string
+          ip_address?: string | null
+          notes?: string | null
+          password?: string | null
+          plan_name?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+          vps_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vps_subscriptions_vps_plan_id_fkey"
+            columns: ["vps_plan_id"]
+            isOneToOne: false
+            referencedRelation: "vps_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

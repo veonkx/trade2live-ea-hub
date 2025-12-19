@@ -344,6 +344,10 @@ const AdminDashboard = () => {
               <Server className="w-4 h-4 mr-2" />
               VPS Plans
             </Button>
+            <Button variant="outline" size="sm" onClick={() => navigate("/admin/vps-subscriptions")}>
+              <Users className="w-4 h-4 mr-2" />
+              VPS Subscriptions
+            </Button>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ
