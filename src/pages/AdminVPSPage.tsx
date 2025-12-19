@@ -21,6 +21,7 @@ interface VPSPlan {
   cpu: string;
   storage: string;
   mt_accounts: number;
+  os_type: string;
   is_popular: boolean;
   is_active: boolean;
   sort_order: number;
@@ -87,6 +88,7 @@ const AdminVPSPage = () => {
           cpu: plan.cpu,
           storage: plan.storage,
           mt_accounts: plan.mt_accounts,
+          os_type: plan.os_type,
           is_popular: plan.is_popular,
           is_active: plan.is_active,
           sort_order: plan.sort_order,
@@ -222,7 +224,7 @@ const AdminVPSPage = () => {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                   <div className="space-y-2">
                     <Label htmlFor={`ram-${plan.id}`}>RAM</Label>
                     <Input
@@ -248,6 +250,15 @@ const AdminVPSPage = () => {
                       value={plan.storage}
                       onChange={(e) => updatePlan(plan.id, "storage", e.target.value)}
                       placeholder="e.g., 50 GB SSD"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`os-${plan.id}`}>Operating System</Label>
+                    <Input
+                      id={`os-${plan.id}`}
+                      value={plan.os_type}
+                      onChange={(e) => updatePlan(plan.id, "os_type", e.target.value)}
+                      placeholder="e.g., Windows 10"
                     />
                   </div>
                   <div className="space-y-2">
