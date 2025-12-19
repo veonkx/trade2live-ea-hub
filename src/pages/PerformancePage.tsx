@@ -33,6 +33,12 @@ interface MonthlyReturn {
   return_percent: number;
 }
 
+interface EquityDataPoint {
+  ea_type: string;
+  day_number: number;
+  equity_value: number;
+}
+
 // Fallback data
 const fallbackStats: Record<string, PerformanceStats> = {
   icf: {
@@ -73,6 +79,7 @@ const PerformancePage = () => {
   const { t } = useLanguage();
   const [portfolioStats, setPortfolioStats] = useState<Record<string, PerformanceStats>>(fallbackStats);
   const [monthlyData, setMonthlyData] = useState<{ month: string; icf: number; zb: number }[]>([]);
+  const [equityData, setEquityData] = useState<{ day: number; icf: number; zb: number }[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -138,6 +145,37 @@ const PerformancePage = () => {
 
         setMonthlyData(chartData);
       }
+
+      // Fetch equity curve data
+      const { data: equityDataFromDB } = await supabase
+        .from("ea_equity_data")
+        .select("*")
+        .order("day_number");
+
+      if (equityDataFromDB && equityDataFromDB.length > 0) {
+        // Group by day_number
+        const equityMap: Record<number, { icf: number; zb: number }> = {};
+        
+        equityDataFromDB.forEach((e) => {
+          if (!equityMap[e.day_number]) {
+            equityMap[e.day_number] = { icf: 10000, zb: 10000 };
+          }
+          equityMap[e.day_number][e.ea_type as 'icf' | 'zb'] = Number(e.equity_value);
+        });
+
+        const equityChartData = Object.entries(equityMap)
+          .sort(([a], [b]) => Number(a) - Number(b))
+          .map(([day, values]) => ({
+            day: Number(day),
+            icf: values.icf,
+            zb: values.zb,
+          }));
+
+        setEquityData(equityChartData);
+      } else {
+        // Fallback: Generate from monthly returns
+        generateEquityFromMonthly(monthlyReturnsData || []);
+      }
     } catch (error) {
       console.error("Error fetching performance data:", error);
     } finally {
@@ -145,27 +183,48 @@ const PerformancePage = () => {
     }
   };
 
-  // Generate equity data based on monthly returns
-  const equityData = (() => {
+  const generateEquityFromMonthly = (monthlyReturnsData: MonthlyReturn[]) => {
+    if (monthlyReturnsData.length === 0) {
+      setEquityData([
+        { day: 0, icf: 10000, zb: 10000 },
+        { day: 365, icf: 15920, zb: 14210 },
+      ]);
+      return;
+    }
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyMap: Record<string, { icf: number; zb: number }> = {};
+    
+    monthlyReturnsData.forEach((m) => {
+      const key = `${m.year}-${m.month}`;
+      if (!monthlyMap[key]) {
+        monthlyMap[key] = { icf: 0, zb: 0 };
+      }
+      monthlyMap[key][m.ea_type as 'icf' | 'zb'] = Number(m.return_percent);
+    });
+
     let icfEquity = 10000;
     let zbEquity = 10000;
     const data = [{ day: 0, icf: 10000, zb: 10000 }];
     
-    monthlyData.forEach((m, i) => {
-      icfEquity = icfEquity * (1 + m.icf / 100);
-      zbEquity = zbEquity * (1 + m.zb / 100);
-      data.push({
-        day: (i + 1) * 30,
-        icf: Math.round(icfEquity),
-        zb: Math.round(zbEquity),
+    Object.entries(monthlyMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-12)
+      .forEach(([_, values], i) => {
+        icfEquity = icfEquity * (1 + values.icf / 100);
+        zbEquity = zbEquity * (1 + values.zb / 100);
+        data.push({
+          day: (i + 1) * 30,
+          icf: Math.round(icfEquity),
+          zb: Math.round(zbEquity),
+        });
       });
-    });
-    
-    return data.length > 1 ? data : [
+
+    setEquityData(data.length > 1 ? data : [
       { day: 0, icf: 10000, zb: 10000 },
       { day: 365, icf: 15920, zb: 14210 },
-    ];
-  })();
+    ]);
+  };
 
   if (loading) {
     return (
