@@ -12,6 +12,12 @@ interface VPSPlan {
   name: string;
   price_usd: number;
   price_lak: number;
+  price_3m_usd: number;
+  price_3m_lak: number;
+  price_6m_usd: number;
+  price_6m_lak: number;
+  price_12m_usd: number;
+  price_12m_lak: number;
   ram: string;
   cpu: string;
   storage: string;
@@ -20,11 +26,14 @@ interface VPSPlan {
   is_popular: boolean;
 }
 
+type DurationOption = '1m' | '3m' | '6m' | '12m';
+
 const VPSServicePage = () => {
   const { language } = useLanguage();
   const isLao = language === 'lo';
   const [plans, setPlans] = useState<VPSPlan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDuration, setSelectedDuration] = useState<DurationOption>('1m');
 
   useEffect(() => {
     fetchPlans();
@@ -47,11 +56,38 @@ const VPSServicePage = () => {
     }
   };
 
-  const formatPrice = (plan: VPSPlan) => {
-    if (isLao) {
-      return `₭${plan.price_lak.toLocaleString()}`;
+  const durationOptions: { value: DurationOption; label: string; labelLao: string; discount?: string }[] = [
+    { value: '1m', label: '1 Month', labelLao: '1 ເດືອນ' },
+    { value: '3m', label: '3 Months', labelLao: '3 ເດືອນ', discount: '-5%' },
+    { value: '6m', label: '6 Months', labelLao: '6 ເດືອນ', discount: '-10%' },
+    { value: '12m', label: '1 Year', labelLao: '1 ປີ', discount: '-15%' },
+  ];
+
+  const getPrice = (plan: VPSPlan) => {
+    switch (selectedDuration) {
+      case '3m':
+        return isLao ? plan.price_3m_lak : plan.price_3m_usd;
+      case '6m':
+        return isLao ? plan.price_6m_lak : plan.price_6m_usd;
+      case '12m':
+        return isLao ? plan.price_12m_lak : plan.price_12m_usd;
+      default:
+        return isLao ? plan.price_lak : plan.price_usd;
     }
-    return `$${plan.price_usd}`;
+  };
+
+  const formatPrice = (plan: VPSPlan) => {
+    const price = getPrice(plan);
+    if (isLao) {
+      return `₭${price.toLocaleString()}`;
+    }
+    return `$${price}`;
+  };
+
+  const getDurationLabel = () => {
+    const option = durationOptions.find(o => o.value === selectedDuration);
+    if (!option) return '';
+    return isLao ? option.labelLao : option.label;
   };
 
   const features = [
@@ -184,11 +220,37 @@ const VPSServicePage = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               {isLao ? "ແພັກເກັດບໍລິການ" : "Service Packages"}
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
               {isLao 
                 ? "ເລືອກແພັກເກັດທີ່ເໝາະກັບຄວາມຕ້ອງການຂອງທ່ານ"
                 : "Choose the package that suits your needs"}
             </p>
+
+            {/* Duration Selector */}
+            <div className="inline-flex flex-wrap justify-center gap-2 p-2 rounded-xl bg-card border border-border">
+              {durationOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setSelectedDuration(option.value)}
+                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedDuration === option.value
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {isLao ? option.labelLao : option.label}
+                  {option.discount && (
+                    <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded ${
+                      selectedDuration === option.value
+                        ? 'bg-primary-foreground/20 text-primary-foreground'
+                        : 'bg-chart-2/20 text-chart-2'
+                    }`}>
+                      {option.discount}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </motion.div>
 
           {loading ? (
@@ -219,7 +281,7 @@ const VPSServicePage = () => {
                     <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                     <div className="flex items-baseline justify-center gap-1">
                       <span className="text-4xl font-bold text-primary">{formatPrice(plan)}</span>
-                      <span className="text-muted-foreground">{isLao ? "/ເດືອນ" : "/month"}</span>
+                      <span className="text-muted-foreground">/{getDurationLabel()}</span>
                     </div>
                   </div>
                   <div className="space-y-3 mb-6">

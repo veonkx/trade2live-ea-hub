@@ -17,6 +17,12 @@ interface VPSPlan {
   name: string;
   price_usd: number;
   price_lak: number;
+  price_3m_usd: number;
+  price_3m_lak: number;
+  price_6m_usd: number;
+  price_6m_lak: number;
+  price_12m_usd: number;
+  price_12m_lak: number;
   ram: string;
   cpu: string;
   storage: string;
@@ -84,6 +90,12 @@ const AdminVPSPage = () => {
           name: plan.name,
           price_usd: plan.price_usd,
           price_lak: plan.price_lak,
+          price_3m_usd: plan.price_3m_usd,
+          price_3m_lak: plan.price_3m_lak,
+          price_6m_usd: plan.price_6m_usd,
+          price_6m_lak: plan.price_6m_lak,
+          price_12m_usd: plan.price_12m_usd,
+          price_12m_lak: plan.price_12m_lak,
           ram: plan.ram,
           cpu: plan.cpu,
           storage: plan.storage,
@@ -180,6 +192,7 @@ const AdminVPSPage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Basic Info */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div className="space-y-2">
                     <Label htmlFor={`name-${plan.id}`}>Plan Name</Label>
@@ -187,28 +200,6 @@ const AdminVPSPage = () => {
                       id={`name-${plan.id}`}
                       value={plan.name}
                       onChange={(e) => updatePlan(plan.id, "name", e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`price-usd-${plan.id}`}>Price (USD)</Label>
-                    <Input
-                      id={`price-usd-${plan.id}`}
-                      type="number"
-                      value={plan.price_usd}
-                      onChange={(e) =>
-                        updatePlan(plan.id, "price_usd", parseFloat(e.target.value) || 0)
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`price-lak-${plan.id}`}>Price (LAK ₭)</Label>
-                    <Input
-                      id={`price-lak-${plan.id}`}
-                      type="number"
-                      value={plan.price_lak}
-                      onChange={(e) =>
-                        updatePlan(plan.id, "price_lak", parseFloat(e.target.value) || 0)
-                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -224,6 +215,123 @@ const AdminVPSPage = () => {
                   </div>
                 </div>
 
+                {/* Monthly Pricing */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Monthly Price (1 Month)</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-usd-${plan.id}`}>USD ($)</Label>
+                      <Input
+                        id={`price-usd-${plan.id}`}
+                        type="number"
+                        value={plan.price_usd}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_usd", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-lak-${plan.id}`}>LAK (₭)</Label>
+                      <Input
+                        id={`price-lak-${plan.id}`}
+                        type="number"
+                        value={plan.price_lak}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_lak", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3 Month Pricing */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">3 Months Price</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-3m-usd-${plan.id}`}>USD ($)</Label>
+                      <Input
+                        id={`price-3m-usd-${plan.id}`}
+                        type="number"
+                        value={plan.price_3m_usd}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_3m_usd", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-3m-lak-${plan.id}`}>LAK (₭)</Label>
+                      <Input
+                        id={`price-3m-lak-${plan.id}`}
+                        type="number"
+                        value={plan.price_3m_lak}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_3m_lak", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6 Month Pricing */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">6 Months Price</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-6m-usd-${plan.id}`}>USD ($)</Label>
+                      <Input
+                        id={`price-6m-usd-${plan.id}`}
+                        type="number"
+                        value={plan.price_6m_usd}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_6m_usd", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-6m-lak-${plan.id}`}>LAK (₭)</Label>
+                      <Input
+                        id={`price-6m-lak-${plan.id}`}
+                        type="number"
+                        value={plan.price_6m_lak}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_6m_lak", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 12 Month Pricing */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">1 Year Price</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-12m-usd-${plan.id}`}>USD ($)</Label>
+                      <Input
+                        id={`price-12m-usd-${plan.id}`}
+                        type="number"
+                        value={plan.price_12m_usd}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_12m_usd", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`price-12m-lak-${plan.id}`}>LAK (₭)</Label>
+                      <Input
+                        id={`price-12m-lak-${plan.id}`}
+                        type="number"
+                        value={plan.price_12m_lak}
+                        onChange={(e) =>
+                          updatePlan(plan.id, "price_12m_lak", parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Specs */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                   <div className="space-y-2">
                     <Label htmlFor={`ram-${plan.id}`}>RAM</Label>
