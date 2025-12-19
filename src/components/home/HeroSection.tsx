@@ -46,12 +46,23 @@ export const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+            className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4"
           >
             {t("hero.title")}
             <br />
             <span className="text-gradient-gold">{t("hero.titleHighlight")}</span>
           </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="text-xl md:text-2xl font-medium text-primary/90 italic mb-6"
+          >
+            "Trade to Live, Not Live to Trade"
+            <br />
+            <span className="text-muted-foreground text-lg">Trade เพื่อใช้ชีวิต ไม่ใช่ใช้ชีวิตเพื่อ Trade</span>
+          </motion.p>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
