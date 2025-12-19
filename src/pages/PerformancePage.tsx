@@ -1,73 +1,181 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { TrendingUp, TrendingDown, BarChart3, Calendar, Target, Activity } from "lucide-react";
+import { TrendingUp, BarChart3, Calendar, Target, Activity, RefreshCw } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
-const monthlyData = [
-  { month: "Jan", icf: 4.2, zb: 3.1 },
-  { month: "Feb", icf: 3.8, zb: 2.9 },
-  { month: "Mar", icf: 5.1, zb: 3.5 },
-  { month: "Apr", icf: -1.2, zb: 0.8 },
-  { month: "May", icf: 4.5, zb: 3.2 },
-  { month: "Jun", icf: 3.9, zb: 2.8 },
-  { month: "Jul", icf: 5.8, zb: 3.9 },
-  { month: "Aug", icf: 4.1, zb: 3.0 },
-  { month: "Sep", icf: 3.2, zb: 2.5 },
-  { month: "Oct", icf: 4.7, zb: 3.4 },
-  { month: "Nov", icf: 5.2, zb: 3.7 },
-  { month: "Dec", icf: 4.0, zb: 3.0 },
-];
+interface PerformanceStats {
+  ea_type: string;
+  name: string;
+  total_return: string;
+  monthly_avg: string;
+  max_drawdown: string;
+  win_rate: string;
+  profit_factor: string;
+  total_trades: string;
+  trading_days: string;
+  sharpe_ratio: string;
+  status: string;
+  start_date: string;
+  last_updated_at: string;
+  color: string;
+}
 
-const equityData = [
-  { day: 0, icf: 10000, zb: 10000 },
-  { day: 30, icf: 10420, zb: 10310 },
-  { day: 60, icf: 10830, zb: 10610 },
-  { day: 90, icf: 11390, zb: 10980 },
-  { day: 120, icf: 11250, zb: 11070 },
-  { day: 150, icf: 11760, zb: 11420 },
-  { day: 180, icf: 12220, zb: 11740 },
-  { day: 210, icf: 12930, zb: 12200 },
-  { day: 240, icf: 13460, zb: 12560 },
-  { day: 270, icf: 13890, zb: 12870 },
-  { day: 300, icf: 14550, zb: 13310 },
-  { day: 330, icf: 15310, zb: 13800 },
-  { day: 365, icf: 15920, zb: 14210 },
-];
+interface MonthlyReturn {
+  ea_type: string;
+  year: number;
+  month: number;
+  return_percent: number;
+}
 
-const portfolioStats = {
+// Fallback data
+const fallbackStats: Record<string, PerformanceStats> = {
   icf: {
+    ea_type: "icf",
     name: "Trade2live ICF$",
-    totalReturn: "+52.4%",
-    monthlyAvg: "+4.37%",
-    maxDrawdown: "-12.3%",
-    winRate: "68%",
-    profitFactor: "2.1",
-    totalTrades: "847",
-    tradingDays: "248",
-    sharpeRatio: "1.82",
+    total_return: "+52.4%",
+    monthly_avg: "+4.37%",
+    max_drawdown: "-12.3%",
+    win_rate: "68%",
+    profit_factor: "2.1",
+    total_trades: "847",
+    trading_days: "248",
+    sharpe_ratio: "1.82",
     color: "#d4a017",
     status: "Live",
+    start_date: "2024-01-01",
+    last_updated_at: new Date().toISOString(),
   },
   zb: {
+    ea_type: "zb",
     name: "Trade2live ZB$",
-    totalReturn: "+38.2%",
-    monthlyAvg: "+3.18%",
-    maxDrawdown: "-8.1%",
-    winRate: "72%",
-    profitFactor: "2.4",
-    totalTrades: "623",
-    tradingDays: "284",
-    sharpeRatio: "2.14",
+    total_return: "+38.2%",
+    monthly_avg: "+3.18%",
+    max_drawdown: "-8.1%",
+    win_rate: "72%",
+    profit_factor: "2.4",
+    total_trades: "623",
+    trading_days: "284",
+    sharpe_ratio: "2.14",
     color: "#22c55e",
     status: "Live",
+    start_date: "2024-01-01",
+    last_updated_at: new Date().toISOString(),
   },
 };
 
 const PerformancePage = () => {
   const { t } = useLanguage();
+  const [portfolioStats, setPortfolioStats] = useState<Record<string, PerformanceStats>>(fallbackStats);
+  const [monthlyData, setMonthlyData] = useState<{ month: string; icf: number; zb: number }[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPerformanceData();
+  }, []);
+
+  const fetchPerformanceData = async () => {
+    try {
+      // Fetch stats
+      const { data: statsData } = await supabase
+        .from("ea_performance_stats")
+        .select("*");
+
+      if (statsData && statsData.length > 0) {
+        const statsMap: Record<string, PerformanceStats> = {};
+        statsData.forEach((stat) => {
+          statsMap[stat.ea_type] = {
+            ...stat,
+            color: stat.ea_type === 'icf' ? '#d4a017' : '#22c55e',
+          };
+        });
+        setPortfolioStats(statsMap);
+        
+        // Get latest update time
+        const latestUpdate = statsData.reduce((latest, stat) => {
+          return new Date(stat.last_updated_at) > new Date(latest) ? stat.last_updated_at : latest;
+        }, statsData[0].last_updated_at);
+        setLastUpdated(latestUpdate);
+      }
+
+      // Fetch monthly returns
+      const { data: monthlyReturnsData } = await supabase
+        .from("ea_monthly_returns")
+        .select("*")
+        .order("year")
+        .order("month");
+
+      if (monthlyReturnsData && monthlyReturnsData.length > 0) {
+        // Group by month and create chart data
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthlyMap: Record<string, { icf: number; zb: number }> = {};
+        
+        monthlyReturnsData.forEach((m) => {
+          const key = `${m.year}-${m.month}`;
+          if (!monthlyMap[key]) {
+            monthlyMap[key] = { icf: 0, zb: 0 };
+          }
+          monthlyMap[key][m.ea_type as 'icf' | 'zb'] = Number(m.return_percent);
+        });
+
+        const chartData = Object.entries(monthlyMap)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .slice(-12) // Last 12 months
+          .map(([key, values]) => {
+            const [year, month] = key.split('-');
+            return {
+              month: monthNames[parseInt(month) - 1],
+              icf: values.icf,
+              zb: values.zb,
+            };
+          });
+
+        setMonthlyData(chartData);
+      }
+    } catch (error) {
+      console.error("Error fetching performance data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Generate equity data based on monthly returns
+  const equityData = (() => {
+    let icfEquity = 10000;
+    let zbEquity = 10000;
+    const data = [{ day: 0, icf: 10000, zb: 10000 }];
+    
+    monthlyData.forEach((m, i) => {
+      icfEquity = icfEquity * (1 + m.icf / 100);
+      zbEquity = zbEquity * (1 + m.zb / 100);
+      data.push({
+        day: (i + 1) * 30,
+        icf: Math.round(icfEquity),
+        zb: Math.round(zbEquity),
+      });
+    });
+    
+    return data.length > 1 ? data : [
+      { day: 0, icf: 10000, zb: 10000 },
+      { day: 365, icf: 15920, zb: 14210 },
+    ];
+  })();
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -92,6 +200,14 @@ const PerformancePage = () => {
             <p className="text-lg text-muted-foreground">
               {t("performance.description")}
             </p>
+            {lastUpdated && (
+              <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+                <Calendar className="w-4 h-4 text-primary" />
+                <span className="text-sm text-muted-foreground">
+                  อัพเดทล่าสุด: {format(new Date(lastUpdated), 'dd/MM/yyyy')}
+                </span>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -100,7 +216,7 @@ const PerformancePage = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {Object.entries(portfolioStats).map(([key, stats], index) => (
+            {Object.entries(portfolioStats).map(([key, stats]: [string, PerformanceStats], index) => (
               <motion.div
                 key={key}
                 initial={{ opacity: 0, y: 30 }}
@@ -126,26 +242,26 @@ const PerformancePage = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-heading text-3xl font-bold text-profit">{stats.totalReturn}</div>
+                    <div className="font-heading text-3xl font-bold text-profit">{stats.total_return}</div>
                     <div className="text-sm text-muted-foreground">{t("performance.totalReturn")}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-4 gap-4">
                   <div className="text-center p-3 rounded-lg bg-background/50">
-                    <div className="font-heading text-lg font-bold">{stats.monthlyAvg}</div>
+                    <div className="font-heading text-lg font-bold">{stats.monthly_avg}</div>
                     <div className="text-xs text-muted-foreground">{t("performance.monthlyAvg")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
-                    <div className="font-heading text-lg font-bold text-primary">{stats.maxDrawdown}</div>
+                    <div className="font-heading text-lg font-bold text-primary">{stats.max_drawdown}</div>
                     <div className="text-xs text-muted-foreground">{t("performance.maxDD")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
-                    <div className="font-heading text-lg font-bold">{stats.winRate}</div>
+                    <div className="font-heading text-lg font-bold">{stats.win_rate}</div>
                     <div className="text-xs text-muted-foreground">{t("performance.winRate")}</div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-background/50">
-                    <div className="font-heading text-lg font-bold">{stats.profitFactor}</div>
+                    <div className="font-heading text-lg font-bold">{stats.profit_factor}</div>
                     <div className="text-xs text-muted-foreground">{t("performance.profitFactor")}</div>
                   </div>
                 </div>
@@ -278,7 +394,7 @@ const PerformancePage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {Object.entries(portfolioStats).map(([key, stats], index) => (
+            {Object.entries(portfolioStats).map(([key, stats]: [string, PerformanceStats], index) => (
               <motion.div
                 key={key}
                 initial={{ opacity: 0, y: 20 }}
@@ -292,14 +408,14 @@ const PerformancePage = () => {
                 </h3>
                 <div className="space-y-4">
                   {[
-                    { labelKey: "performance.stats.totalReturn", value: stats.totalReturn },
-                    { labelKey: "performance.stats.monthlyAverage", value: stats.monthlyAvg },
-                    { labelKey: "performance.stats.maxDrawdown", value: stats.maxDrawdown },
-                    { labelKey: "performance.stats.winRate", value: stats.winRate },
-                    { labelKey: "performance.stats.profitFactor", value: stats.profitFactor },
-                    { labelKey: "performance.stats.totalTrades", value: stats.totalTrades },
-                    { labelKey: "performance.stats.tradingDays", value: stats.tradingDays },
-                    { labelKey: "performance.stats.sharpeRatio", value: stats.sharpeRatio },
+                    { labelKey: "performance.stats.totalReturn", value: stats.total_return },
+                    { labelKey: "performance.stats.monthlyAverage", value: stats.monthly_avg },
+                    { labelKey: "performance.stats.maxDrawdown", value: stats.max_drawdown },
+                    { labelKey: "performance.stats.winRate", value: stats.win_rate },
+                    { labelKey: "performance.stats.profitFactor", value: stats.profit_factor },
+                    { labelKey: "performance.stats.totalTrades", value: stats.total_trades },
+                    { labelKey: "performance.stats.tradingDays", value: stats.trading_days },
+                    { labelKey: "performance.stats.sharpeRatio", value: stats.sharpe_ratio },
                   ].map((item) => (
                     <div key={item.labelKey} className="flex justify-between py-2 border-b border-border last:border-0">
                       <span className="text-muted-foreground">{t(item.labelKey)}</span>

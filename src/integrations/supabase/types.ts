@@ -14,6 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
+      ea_equity_data: {
+        Row: {
+          created_at: string
+          day_number: number
+          ea_type: string
+          equity_value: number
+          id: string
+          record_date: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_number: number
+          ea_type: string
+          equity_value?: number
+          id?: string
+          record_date?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_number?: number
+          ea_type?: string
+          equity_value?: number
+          id?: string
+          record_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ea_monthly_returns: {
+        Row: {
+          created_at: string
+          ea_type: string
+          id: string
+          month: number
+          return_percent: number
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          ea_type: string
+          id?: string
+          month: number
+          return_percent?: number
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          ea_type?: string
+          id?: string
+          month?: number
+          return_percent?: number
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      ea_performance_stats: {
+        Row: {
+          created_at: string
+          ea_type: string
+          id: string
+          last_updated_at: string
+          max_drawdown: string
+          monthly_avg: string
+          name: string
+          profit_factor: string
+          sharpe_ratio: string
+          start_date: string
+          status: string
+          total_return: string
+          total_trades: string
+          trading_days: string
+          updated_at: string
+          win_rate: string
+        }
+        Insert: {
+          created_at?: string
+          ea_type: string
+          id?: string
+          last_updated_at?: string
+          max_drawdown?: string
+          monthly_avg?: string
+          name: string
+          profit_factor?: string
+          sharpe_ratio?: string
+          start_date?: string
+          status?: string
+          total_return?: string
+          total_trades?: string
+          trading_days?: string
+          updated_at?: string
+          win_rate?: string
+        }
+        Update: {
+          created_at?: string
+          ea_type?: string
+          id?: string
+          last_updated_at?: string
+          max_drawdown?: string
+          monthly_avg?: string
+          name?: string
+          profit_factor?: string
+          sharpe_ratio?: string
+          start_date?: string
+          status?: string
+          total_return?: string
+          total_trades?: string
+          trading_days?: string
+          updated_at?: string
+          win_rate?: string
+        }
+        Relationships: []
+      }
       license_keys: {
         Row: {
           activated_at: string | null
