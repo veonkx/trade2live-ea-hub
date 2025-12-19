@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Server, Shield, Zap, Clock, Globe, Headphones, CheckCircle } from "lucide-react";
 
-const VPNServicePage = () => {
+const VPSServicePage = () => {
   const { language } = useLanguage();
   const isLao = language === 'lo';
 
@@ -107,11 +107,11 @@ const VPNServicePage = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <Server className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">VPN Service</span>
+              <span className="text-sm font-medium text-primary">VPS Service</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               <span className="gradient-text">
-                {isLao ? "VPN Server ສຳລັບ EA" : "VPN Server for EA"}
+                {isLao ? "VPS Server ສຳລັບ EA" : "VPS Server for EA"}
               </span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
@@ -284,4 +284,4 @@ const VPNServicePage = () => {
   );
 };
 
-export default VPNServicePage;
+export default VPSServicePage;

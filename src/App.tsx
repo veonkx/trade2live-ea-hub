@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import EADetailPage from "./pages/EADetailPage";
 import CopyTradePage from "./pages/CopyTradePage";
-import VPNServicePage from "./pages/VPNServicePage";
+import VPSServicePage from "./pages/VPSServicePage";
 import PricingPage from "./pages/PricingPage";
 import PerformancePage from "./pages/PerformancePage";
 import ContactPage from "./pages/ContactPage";
@@ -34,7 +34,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/ea/:id" element={<EADetailPage />} />
               <Route path="/copy-trade" element={<CopyTradePage />} />
-              <Route path="/vpn-service" element={<VPNServicePage />} />
+              <Route path="/vps-service" element={<VPSServicePage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/performance" element={<PerformancePage />} />
               <Route path="/contact" element={<ContactPage />} />
